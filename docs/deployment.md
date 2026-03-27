@@ -7,12 +7,26 @@ En una máquina con internet, descargar/copiar snapshots locales de:
 - `design-skills`
 
 ## 2) Importar snapshots al repo privado
+Primero corré diagnóstico de mapping:
+```bash
+./scripts/import_upstream_snapshots.sh \
+  --dry-run --debug-mapping \
+  --marketingskills /path/to/marketingskills \
+  --animation-principles /path/to/animation-principles \
+  --design-skills /path/to/design-skills
+```
+
+Resolución por orden: `exact match` → `alias match` → `normalized match` → `fuzzy match` → `unresolved`.
+
+Si el dry-run resuelve correctamente, ejecutar importación real:
 ```bash
 ./scripts/import_upstream_snapshots.sh \
   --marketingskills /path/to/marketingskills \
   --animation-principles /path/to/animation-principles \
   --design-skills /path/to/design-skills
 ```
+
+Usar `--force-overwrite` solo si querés reemplazar `skills/*/UPSTREAM_SOURCE.md` ya existentes.
 
 ## 3) Instalar y verificar
 ```bash
