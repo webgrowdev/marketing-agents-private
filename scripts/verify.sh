@@ -11,7 +11,7 @@ must_exist=(
   README.md LICENSE_NOTES.md Makefile
   docs/architecture.md docs/agents.md docs/skills-map.md docs/upstream-sources.md docs/security.md docs/maintenance.md docs/deployment.md docs/placeholders.md
   shared/product-marketing-context.md
-  scripts/install.sh scripts/import_upstream_snapshots.sh scripts/sync_to_openclaw.sh scripts/verify.sh scripts/backup.sh scripts/lib.sh
+  scripts/install.sh scripts/import_upstream_snapshots.sh scripts/sync_to_openclaw.sh scripts/resolve_pr_conflicts.sh scripts/verify.sh scripts/backup.sh scripts/lib.sh
 )
 
 for f in "${must_exist[@]}"; do

@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
 
-.PHONY: verify sync backup tree import-snapshots
+.PHONY: verify sync backup tree import-snapshots resolve-conflicts
 
 verify:
 	./scripts/verify.sh
@@ -20,3 +20,6 @@ tree:
 	else \
 		find . -mindepth 1 -not -path './.git*' -not -path './backups*' | sort; \
 	fi
+
+resolve-conflicts:
+	./scripts/resolve_pr_conflicts.sh --ours

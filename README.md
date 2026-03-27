@@ -43,3 +43,10 @@ Este entorno no tiene acceso saliente confiable a GitHub (error `403 CONNECT tun
 
 ## Mantenimiento
 Ver `docs/maintenance.md` y `docs/deployment.md`.
+
+## Resolver conflictos de PR (GitHub "This branch has conflicts")
+Si GitHub marca conflictos, haz merge/rebase del branch objetivo localmente y luego:
+```bash
+./scripts/resolve_pr_conflicts.sh --ours
+```
+Usa `--theirs` si querés priorizar la versión del branch objetivo en esos archivos.
