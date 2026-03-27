@@ -1,11 +1,11 @@
-# seo-audit
+# competitor-alternatives
 
 - **Estado:** internal placeholder (pending snapshot import)
 - **Origen esperado:** coreyhaines31/marketingskills
 - **Tipo de integración actual:** plantilla local pendiente de importación offline/manual
 
 ## Objetivo
-Definir el marco operativo para `seo-audit` dentro del repositorio privado.
+Definir el marco operativo para `competitor-alternatives` dentro del repositorio privado.
 
 ## Estado de curación
 Este skill NO fue curado contra upstream real en este entorno porque el acceso remoto está bloqueado (`403 CONNECT tunnel failed`).

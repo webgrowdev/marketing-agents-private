@@ -1,32 +1,31 @@
 # motion-designer
 
-- **Estado:** internal placeholder
-- **Origen:** dylantarre/animation-principles + ihlamury/design-skills (no verificable desde entorno)
-- **Tipo de integración:** carpeta local curada con `SKILL.md`
+- **Estado:** internal placeholder (pending snapshot import)
+- **Origen esperado:** dylantarre/animation-principles + ihlamury/design-skills
+- **Tipo de integración actual:** plantilla local pendiente de importación offline/manual
 
 ## Objetivo
-Definir una guía ejecutable para `motion-designer` dentro de este repositorio privado.
+Definir el marco operativo para `motion-designer` dentro del repositorio privado.
 
-## Entradas
-- Contexto de producto (`shared/product-marketing-context.md`).
-- Objetivo de negocio + KPI.
-- Restricciones operativas y de marca.
+## Estado de curación
+Este skill NO fue curado contra upstream real en este entorno porque el acceso remoto está bloqueado (`403 CONNECT tunnel failed`).
 
-## Flujo sugerido
-1. Alinear objetivo y métrica principal.
-2. Ejecutar diagnóstico específico del skill.
-3. Priorizar acciones por impacto/esfuerzo.
-4. Entregar plan accionable + checklist de validación.
+## Próximo paso recomendado
+1. Descargar snapshot local del upstream correspondiente.
+2. Ejecutar `./scripts/import_upstream_snapshots.sh ...` con la ruta local.
+3. Revisar diff y actualizar documentación de atribución.
 
-## Salidas
-- Recomendaciones priorizadas.
-- Lista de tareas ejecutables.
-- Riesgos, dependencias y próximos pasos.
+## Entradas mínimas
+- `shared/product-marketing-context.md` completo.
+- Objetivo/KPI asociado a la tarea.
+- Restricciones de marca/compliance/canal.
 
-## Notas
-Placeholder explícito por falta de verificación remota (egress bloqueado).
+## Salidas esperadas
+- Guía accionable con pasos concretos.
+- Riesgos y dependencias documentados.
+- Checklist de validación.
 
-## Cómo completar este placeholder
-1. Validar existencia del skill equivalente en upstream.
-2. Importar/adaptar contenido respetando licencia y atribución.
-3. Actualizar `docs/placeholders.md`, `docs/upstream-sources.md` y `LICENSE_NOTES.md`.
+## Placeholder: cómo completarlo
+- Importar material upstream verificado localmente.
+- Marcar estado `imported` o `adapted` según corresponda.
+- Actualizar `docs/skills-map.md`, `docs/upstream-sources.md`, `docs/placeholders.md` y `LICENSE_NOTES.md`.
