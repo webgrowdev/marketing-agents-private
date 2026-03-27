@@ -19,13 +19,16 @@ Este entorno no tiene acceso saliente confiable a GitHub (error `403 CONNECT tun
 
 ## Flujo recomendado sin acceso remoto desde Codex
 1. Descargar snapshots locales de upstream en una máquina con internet.
-2. Ejecutar importación offline/manual asistida:
+2. Ejecutar importación offline/manual asistida (con mapping y diagnóstico opcional):
    ```bash
    ./scripts/import_upstream_snapshots.sh \
+     --dry-run --debug-mapping \
      --marketingskills /path/to/marketingskills \
      --animation-principles /path/to/animation-principles \
      --design-skills /path/to/design-skills
    ```
+   El importador resuelve cada slug local por este orden: **exact match → alias match → normalized/fuzzy match → unresolved**.
+   Cuando el resultado sea correcto, repetir sin `--dry-run` (y usar `--force-overwrite` solo si querés reemplazar `UPSTREAM_SOURCE.md` existentes).
 3. Verificar estructura y estados:
    ```bash
    ./scripts/verify.sh
