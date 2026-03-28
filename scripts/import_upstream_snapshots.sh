@@ -1,8 +1,35 @@
 #!/usr/bin/env bash
 set -euo pipefail
-SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd)
-# shellcheck source=./lib.sh
-source "${SCRIPT_DIR}/lib.sh"
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
+
+# Cargar lib.sh si existe; si no, definir fallbacks mínimos
+if [[ -f "${SCRIPT_DIR}/lib.sh" ]]; then
+  # shellcheck source=./lib.sh
+  source "${SCRIPT_DIR}/lib.sh"
+fi
+
+if ! declare -F log_info >/dev/null 2>&1; then
+  log_info()  { printf '[INFO] %s\n' "$*"; }
+fi
+if ! declare -F log_warn >/dev/null 2>&1; then
+  log_warn()  { printf '[WARN] %s\n' "$*" >&2; }
+fi
+if ! declare -F log_error >/dev/null 2>&1; then
+  log_error() { printf '[ERROR] %s\n' "$*" >&2; }
+fi
+if ! declare -F ensure_dir >/dev/null 2>&1; then
+  ensure_dir() { mkdir -p "$1"; }
+fi
+if ! declare -F repo_root >/dev/null 2>&1; then
+  repo_root() {
+    if git -C "${SCRIPT_DIR}/.." rev-parse --show-toplevel >/dev/null 2>&1; then
+      git -C "${SCRIPT_DIR}/.." rev-parse --show-toplevel
+    else
+      cd "${SCRIPT_DIR}/.." && pwd
+    fi
+  }
+fi
 
 MARKETINGSKILLS_PATH=""
 ANIMATION_PATH=""
@@ -19,327 +46,486 @@ Opciones:
   --marketingskills PATH        Snapshot local de marketingskills
   --animation-principles PATH   Snapshot local de animation-principles
   --design-skills PATH          Snapshot local de design-skills
-  --dry-run                     Simular importación
-  --force-overwrite             Permitir reemplazar snapshots ya importados
-  --debug-mapping               Imprimir resolución de nombres por skill
+  --dry-run                     Simular importación sin escribir archivos
+  --force-overwrite             Permitir reemplazar SKILL.md y UPSTREAM_SOURCE.md existentes
+  --debug-mapping               Imprimir tabla completa de resolución por skill
+  -h, --help                    Mostrar esta ayuda
 USAGE
 }
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --marketingskills) MARKETINGSKILLS_PATH="$2"; shift 2 ;;
-    --animation-principles) ANIMATION_PATH="$2"; shift 2 ;;
-    --design-skills) DESIGN_PATH="$2"; shift 2 ;;
-    --dry-run) DRY_RUN=1; shift ;;
-    --force-overwrite) FORCE_OVERWRITE=1; shift ;;
-    --debug-mapping) DEBUG_MAPPING=1; shift ;;
-    -h|--help) usage; exit 0 ;;
-    *) log_error "Argumento no reconocido: $1"; usage; exit 2 ;;
+    --marketingskills)
+      MARKETINGSKILLS_PATH="${2:-}"
+      shift 2
+      ;;
+    --animation-principles)
+      ANIMATION_PATH="${2:-}"
+      shift 2
+      ;;
+    --design-skills)
+      DESIGN_PATH="${2:-}"
+      shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=1
+      shift
+      ;;
+    --force-overwrite)
+      FORCE_OVERWRITE=1
+      shift
+      ;;
+    --debug-mapping)
+      DEBUG_MAPPING=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      log_error "Argumento no reconocido: $1"
+      usage
+      exit 2
+      ;;
   esac
 done
 
-ROOT=$(repo_root)
-STATE_DIR="${ROOT}/.import"
-STATE_FILE="${STATE_DIR}/state.tsv"
-ensure_dir "$STATE_DIR"
-[[ -f "$STATE_FILE" ]] || printf 'timestamp\tskill\tstatus\tsource_repo\tsource_path\tresolution_method\n' > "$STATE_FILE"
-
-declare -A REPO_PATHS=(
-  [marketingskills]="$MARKETINGSKILLS_PATH"
-  [animation-principles]="$ANIMATION_PATH"
-  [design-skills]="$DESIGN_PATH"
-)
-declare -A REPO_LABELS=(
-  [marketingskills]="coreyhaines31/marketingskills"
-  [animation-principles]="dylantarre/animation-principles"
-  [design-skills]="ihlamury/design-skills"
-)
-declare -A REPO_SKILLS_ROOT=()
-declare -A REPO_SKILLS_LIST=()
-declare -A ALIAS_MAP=()
-
 validate_path() {
-  local name=$1 path=$2
+  local name="$1"
+  local path="$2"
+
   [[ -z "$path" ]] && return 0
-  [[ -d "$path" ]] || { log_error "Ruta inválida para ${name}: ${path}"; exit 2; }
+
+  if [[ ! -d "$path" ]]; then
+    log_error "Ruta inválida para ${name}: ${path}"
+    exit 2
+  fi
 }
 
-validate_path marketingskills "$MARKETINGSKILLS_PATH"
-validate_path animation-principles "$ANIMATION_PATH"
-validate_path design-skills "$DESIGN_PATH"
+validate_path "marketingskills" "$MARKETINGSKILLS_PATH"
+validate_path "animation-principles" "$ANIMATION_PATH"
+validate_path "design-skills" "$DESIGN_PATH"
 
 if [[ -z "$MARKETINGSKILLS_PATH" && -z "$ANIMATION_PATH" && -z "$DESIGN_PATH" ]]; then
   log_error "Debes proveer al menos una ruta de snapshot upstream"
   exit 2
 fi
 
-normalize_slug() {
-  echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+//g'
-}
+ROOT="$(repo_root)"
+STATE_DIR="${ROOT}/.import"
+STATE_FILE="${STATE_DIR}/state.tsv"
+ensure_dir "$STATE_DIR"
 
-tokenize_slug() {
-  echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/ /g' | xargs
-}
+if [[ ! -f "$STATE_FILE" ]]; then
+  printf 'timestamp\tskill\taction\tsource_repo\tsource_path\tresolution_method\n' > "$STATE_FILE"
+fi
+
+declare -A REPO_BASE=(
+  [marketingskills]="$MARKETINGSKILLS_PATH"
+  [animation-principles]="$ANIMATION_PATH"
+  [design-skills]="$DESIGN_PATH"
+)
+
+declare -A REPO_LABEL=(
+  [marketingskills]="coreyhaines31/marketingskills"
+  [animation-principles]="dylantarre/animation-principles"
+  [design-skills]="ihlamury/design-skills"
+)
+
+declare -A ALIAS_MAP=()
+
+# Contadores
+count_imported=0
+count_dry_run=0
+count_skipped=0
+count_unresolved=0
+count_exact=0
+count_nested=0
+count_alias=0
 
 add_alias() {
-  local repo=$1 local_skill=$2 upstream_skill=$3
-  ALIAS_MAP["${repo}:${local_skill}"]="$upstream_skill"
+  local repo="$1"
+  local local_skill="$2"
+  local upstream_slug="$3"
+  ALIAS_MAP["${repo}:${local_skill}"]="$upstream_slug"
 }
 
 load_aliases() {
-  # Marketing / growth aliases (editable)
-  add_alias marketingskills "ab-test-setup" "ab-testing"
-  add_alias marketingskills "analytics-tracking" "analytics"
-  add_alias marketingskills "copy-editing" "editing"
-  add_alias marketingskills "email-sequence" "email-marketing"
-  add_alias marketingskills "page-cro" "landing-page-cro"
-  add_alias marketingskills "popup-cro" "popup-optimization"
-  add_alias marketingskills "programmatic-seo" "programmatic"
-  add_alias marketingskills "schema-markup" "schema"
-
-  # Motion aliases (editable)
-  add_alias animation-principles "motion-designer" "motion-design"
-  add_alias animation-principles "svg-animation-engineer" "svg-animation"
-  add_alias design-skills "apple-ui-skills" "apple-ui"
-  add_alias design-skills "video-motion-graphics" "motion-graphics"
-  add_alias design-skills "dramatic-2000ms-plus" "dramatic"
+  # Alias confirmados o resueltos de forma pragmática
+  add_alias "design-skills" "apple-ui-skills" "apple"
+  add_alias "animation-principles" "svg-animation-engineer" "web-motion-design"
+  add_alias "design-skills" "elevated-design" "linear"
 }
 
-find_skills_root() {
-  local base=$1
-  [[ -d "$base" ]] || return 1
-
-  if [[ -d "$base/skills" ]]; then
-    echo "$base/skills"
-    return 0
-  fi
-
-  local nested
-  nested=$(find "$base" -maxdepth 3 -type d -name skills | head -n 1 || true)
-  if [[ -n "$nested" ]]; then
-    echo "$nested"
-    return 0
-  fi
-
-  return 1
+has_skills_dir() {
+  local repo="$1"
+  local base="${REPO_BASE[$repo]:-}"
+  [[ -n "$base" && -d "${base}/skills" ]]
 }
 
-load_repo_catalog() {
-  local repo=$1
-  local base=${REPO_PATHS[$repo]}
-  [[ -n "$base" ]] || return 0
-
-  local skills_root
-  if ! skills_root=$(find_skills_root "$base"); then
-    log_warn "No se encontró carpeta skills en snapshot ${repo}: ${base}"
-    REPO_SKILLS_ROOT[$repo]=""
-    REPO_SKILLS_LIST[$repo]=""
-    return 0
-  fi
-
-  REPO_SKILLS_ROOT[$repo]="$skills_root"
-  local list
-  list=$(find "$skills_root" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | tr '\n' ' ')
-  REPO_SKILLS_LIST[$repo]="$list"
-
-  log_info "Snapshot ${repo}: skills_root=${skills_root}"
-  if [[ "$DEBUG_MAPPING" -eq 1 ]]; then
-    log_info "Snapshot ${repo}: skills_detectados=$(echo "$list" | xargs)"
-  fi
+find_first_md_file() {
+  local dir="$1"
+  find "$dir" -maxdepth 1 -type f \( -name '*.md' -o -name '*.MD' \) | sort | head -n 1
 }
 
-# heuristic score by token overlap.
-score_similarity() {
-  local local_skill=$1 candidate=$2
-  local local_tokens candidate_tokens
-  local_tokens=$(tokenize_slug "$local_skill")
-  candidate_tokens=$(tokenize_slug "$candidate")
+find_source_markdown() {
+  local dir="$1"
+  local source_file=""
 
-  local score=0
-  for lt in $local_tokens; do
-    for ct in $candidate_tokens; do
-      if [[ "$lt" == "$ct" ]]; then
-        score=$((score + 1))
-      fi
-    done
-  done
-  echo "$score"
-}
-
-resolve_skill_folder() {
-  local repo=$1 local_skill=$2
-  local list="${REPO_SKILLS_LIST[$repo]:-}"
-  [[ -n "$list" ]] || return 1
-
-  # 1) exact folder match
-  for candidate in $list; do
-    if [[ "$candidate" == "$local_skill" ]]; then
-      printf '%s\t%s\n' "$candidate" "exact match"
-      return 0
-    fi
-  done
-
-  # 2) explicit alias map
-  local alias_key="${repo}:${local_skill}"
-  local alias_value="${ALIAS_MAP[$alias_key]:-}"
-  if [[ -n "$alias_value" ]]; then
-    for candidate in $list; do
-      if [[ "$candidate" == "$alias_value" ]]; then
-        printf '%s\t%s\n' "$candidate" "alias match"
-        return 0
-      fi
-    done
+  if [[ -f "${dir}/SKILL.md" ]]; then
+    source_file="${dir}/SKILL.md"
+  else
+    source_file="$(find_first_md_file "$dir")"
   fi
 
-  # 3) normalized exactness (remove punctuation)
-  local local_norm
-  local_norm=$(normalize_slug "$local_skill")
-  for candidate in $list; do
-    if [[ "$(normalize_slug "$candidate")" == "$local_norm" ]]; then
-      printf '%s\t%s\n' "$candidate" "normalized match"
-      return 0
-    fi
-  done
-
-  # 4) fallback similarity by token overlap
-  local best_candidate=""
-  local best_score=0
-  local ties=0
-  for candidate in $list; do
-    local score
-    score=$(score_similarity "$local_skill" "$candidate")
-    if (( score > best_score )); then
-      best_score=$score
-      best_candidate=$candidate
-      ties=0
-    elif (( score == best_score && score > 0 )); then
-      ties=$((ties + 1))
-    fi
-  done
-
-  # Require at least 2 token overlaps and no ties.
-  if (( best_score >= 2 && ties == 0 )); then
-    printf '%s\t%s\n' "$best_candidate" "fuzzy match"
-    return 0
-  fi
-
-  return 1
-}
-
-copy_skill_snapshot() {
-  local skill=$1 repo=$2
-  local dest_dir="${ROOT}/skills/${skill}"
-  local dest_file="${dest_dir}/UPSTREAM_SOURCE.md"
-  local skills_root="${REPO_SKILLS_ROOT[$repo]:-}"
-
-  [[ -n "$skills_root" ]] || return 1
-
-  local resolved
-  if ! resolved=$(resolve_skill_folder "$repo" "$skill"); then
-    return 1
-  fi
-
-  local upstream_folder method source_file
-  upstream_folder=$(echo "$resolved" | cut -f1)
-  method=$(echo "$resolved" | cut -f2)
-  source_file="${skills_root}/${upstream_folder}/SKILL.md"
-
-  if [[ ! -f "$source_file" ]]; then
-    source_file=$(find "${skills_root}/${upstream_folder}" -maxdepth 1 -type f -name '*.md' | head -n 1 || true)
-  fi
   [[ -n "$source_file" && -f "$source_file" ]] || return 1
+  printf '%s\n' "$source_file"
+}
+
+# Devuelve:
+# <canonical_slug>\t<alias_applied:0|1>
+resolve_alias() {
+  local repo="$1"
+  local local_skill="$2"
+  local key="${repo}:${local_skill}"
+
+  if [[ -n "${ALIAS_MAP[$key]:-}" ]]; then
+    printf '%s\t1\n' "${ALIAS_MAP[$key]}"
+  else
+    printf '%s\t0\n' "$local_skill"
+  fi
+}
+
+# Devuelve:
+# <source_file>\t<upstream_path>\t<resolution_method>
+resolve_in_repo() {
+  local repo="$1"
+  local local_skill="$2"
+  local base="${REPO_BASE[$repo]:-}"
+
+  [[ -n "$base" ]] || return 1
+  [[ -d "$base" ]] || return 1
+  [[ -d "${base}/skills" ]] || return 1
+
+  local alias_info canonical alias_applied
+  alias_info="$(resolve_alias "$repo" "$local_skill")"
+  canonical="$(printf '%s' "$alias_info" | cut -f1)"
+  alias_applied="$(printf '%s' "$alias_info" | cut -f2)"
+
+  local source_file=""
+  local skill_dir=""
+  local upstream_path=""
+  local method=""
+
+  # 1) Exact match plano: skills/<slug>
+  local exact_dir="${base}/skills/${canonical}"
+  if [[ -d "$exact_dir" ]]; then
+    source_file="$(find_source_markdown "$exact_dir" || true)"
+    if [[ -n "$source_file" ]]; then
+      skill_dir="$exact_dir"
+      upstream_path="${skill_dir#${base}/}"
+      if [[ "$alias_applied" -eq 1 ]]; then
+        method="alias"
+      else
+        method="exact"
+      fi
+      printf '%s\t%s\t%s\n' "$source_file" "$upstream_path" "$method"
+      return 0
+    fi
+  fi
+
+  # 2) Nested/recursive match: skills/*/<slug> o más profundo si aparece
+  local nested_dir=""
+  nested_dir="$(find "${base}/skills" -mindepth 2 -type d -name "$canonical" | sort | head -n 1 || true)"
+  if [[ -n "$nested_dir" && -d "$nested_dir" ]]; then
+    source_file="$(find_source_markdown "$nested_dir" || true)"
+    if [[ -n "$source_file" ]]; then
+      skill_dir="$nested_dir"
+      upstream_path="${skill_dir#${base}/}"
+      if [[ "$alias_applied" -eq 1 ]]; then
+        method="alias"
+      else
+        method="nested"
+      fi
+      printf '%s\t%s\t%s\n' "$source_file" "$upstream_path" "$method"
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
+# Devuelve:
+# <repo>\t<source_file>\t<upstream_path>\t<resolution_method>
+resolve_skill() {
+  local local_skill="$1"
+  shift
+  local repos=("$@")
+
+  local repo=""
+  local resolved=""
+  for repo in "${repos[@]}"; do
+    resolved="$(resolve_in_repo "$repo" "$local_skill" || true)"
+    if [[ -n "$resolved" ]]; then
+      printf '%s\t%s\n' "$repo" "$resolved"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+# Fila TSV interna:
+# <local_skill>\t<upstream_repo>\t<upstream_path>\t<method>\t<action>\t<source_file>
+emit_result() {
+  local local_skill="$1"
+  local upstream_repo="$2"
+  local upstream_path="$3"
+  local method="$4"
+  local action="$5"
+  local source_file="${6:-}"
+
+  printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "$local_skill" "$upstream_repo" "$upstream_path" "$method" "$action" "$source_file"
+}
+
+print_debug_header() {
+  printf 'local slug | upstream repo | upstream path | resolution method | action\n'
+}
+
+print_debug_row() {
+  local local_skill="$1"
+  local upstream_repo="$2"
+  local upstream_path="$3"
+  local method="$4"
+  local action="$5"
+
+  printf '%s | %s | %s | %s | %s\n' \
+    "$local_skill" "$upstream_repo" "$upstream_path" "$method" "$action"
+}
+
+print_compact() {
+  local local_skill="$1"
+  local upstream_repo="$2"
+  local upstream_path="$3"
+  local method="$4"
+  local action="$5"
+
+  case "$action" in
+    imported)
+      log_info "IMPORTADO: ${local_skill} <- ${upstream_repo}:${upstream_path} (${method})"
+      ;;
+    dry-run)
+      log_info "DRY-RUN: ${local_skill} <- ${upstream_repo}:${upstream_path} (${method})"
+      ;;
+    skip-existing)
+      log_info "SKIP: ${local_skill} -> ${upstream_repo}:${upstream_path} (${method})"
+      ;;
+    not-found)
+      log_error "UNRESOLVED: ${local_skill}"
+      ;;
+    *)
+      log_info "${action}: ${local_skill}"
+      ;;
+  esac
+}
+
+write_import_files() {
+  local source_file="$1"
+  local dest_dir="$2"
+
+  local dest_skill="${dest_dir}/SKILL.md"
+  local dest_upstream="${dest_dir}/UPSTREAM_SOURCE.md"
 
   ensure_dir "$dest_dir"
-  if [[ -f "$dest_file" && "$FORCE_OVERWRITE" -ne 1 ]]; then
-    log_warn "Saltando ${skill}: ya existe ${dest_file} (usa --force-overwrite para reemplazar)"
-    printf '%s\t%s\t%s\t%s\n' "$skill" "$upstream_folder" "$method" "skipped-existing"
-    return 2
+
+  cp "$source_file" "$dest_skill"
+  cp "$source_file" "$dest_upstream"
+}
+
+update_counters_for_method() {
+  local method="$1"
+  case "$method" in
+    exact)  count_exact=$((count_exact + 1)) ;;
+    nested) count_nested=$((count_nested + 1)) ;;
+    alias)  count_alias=$((count_alias + 1)) ;;
+  esac
+}
+
+record_state() {
+  local local_skill="$1"
+  local action="$2"
+  local repo_label="$3"
+  local source_path="$4"
+  local method="$5"
+
+  local ts
+  ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "$ts" "$local_skill" "$action" "$repo_label" "$source_path" "$method" >> "$STATE_FILE"
+}
+
+# SIEMPRE devuelve 0.
+# El estado viaja en la fila TSV impresa.
+import_skill() {
+  local local_skill="$1"
+  shift
+  local repos=("$@")
+
+  local dest_dir="${ROOT}/skills/${local_skill}"
+  local dest_upstream="${dest_dir}/UPSTREAM_SOURCE.md"
+
+  local resolved=""
+  local repo=""
+  local source_file=""
+  local upstream_path=""
+  local method=""
+  local repo_label=""
+
+  resolved="$(resolve_skill "$local_skill" "${repos[@]}" || true)"
+
+  if [[ -z "$resolved" ]]; then
+    emit_result "$local_skill" "-" "-" "unresolved" "not-found" "-"
+    return 0
+  fi
+
+  repo="$(printf '%s' "$resolved" | cut -f1)"
+  source_file="$(printf '%s' "$resolved" | cut -f2)"
+  upstream_path="$(printf '%s' "$resolved" | cut -f3)"
+  method="$(printf '%s' "$resolved" | cut -f4)"
+  repo_label="${REPO_LABEL[$repo]:-$repo}"
+
+  # Resolver primero, recién después decidir skip
+  if [[ -f "$dest_upstream" && "$FORCE_OVERWRITE" -ne 1 ]]; then
+    emit_result "$local_skill" "$repo_label" "$upstream_path" "$method" "skip-existing" "$source_file"
+    return 0
   fi
 
   if [[ "$DRY_RUN" -eq 1 ]]; then
-    log_info "[dry-run] local=${skill} upstream=${upstream_folder} metodo=${method}"
-  else
-    cp "$source_file" "$dest_file"
-    local ts
-    ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-    printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$ts" "$skill" "imported" "${REPO_LABELS[$repo]}" "$source_file" "$method" >> "$STATE_FILE"
-    log_info "Importado local=${skill} upstream=${upstream_folder} metodo=${method}"
+    emit_result "$local_skill" "$repo_label" "$upstream_path" "$method" "dry-run" "$source_file"
+    return 0
   fi
 
-  printf '%s\t%s\t%s\t%s\n' "$skill" "$upstream_folder" "$method" "resolved"
+  write_import_files "$source_file" "$dest_dir"
+  record_state "$local_skill" "imported" "$repo_label" "$source_file" "$method"
+  emit_result "$local_skill" "$repo_label" "$upstream_path" "$method" "imported" "$source_file"
   return 0
 }
 
-marketing_skills=(seo-audit ai-seo site-architecture programmatic-seo schema-markup competitor-alternatives page-cro signup-flow-cro onboarding-cro form-cro popup-cro paywall-upgrade-cro copywriting copy-editing cold-email email-sequence social-content paid-ads ad-creative analytics-tracking ab-test-setup churn-prevention free-tool-strategy referral-program revops sales-enablement launch-strategy pricing-strategy marketing-ideas marketing-psychology)
-motion_skills=(motion-designer svg-animation-engineer apple-ui-skills elevated-design video-motion-graphics dramatic-2000ms-plus)
+process_result_row() {
+  local row="$1"
 
-load_aliases
-load_repo_catalog marketingskills
-load_repo_catalog animation-principles
-load_repo_catalog design-skills
+  local local_skill=""
+  local upstream_repo=""
+  local upstream_path=""
+  local method=""
+  local action=""
+  local source_file=""
 
-imported=0
-skipped=0
-unresolved=0
-resolution_rows=()
+  IFS=$'\t' read -r local_skill upstream_repo upstream_path method action source_file <<< "$row"
 
-report_resolution() {
-  local row=$1
-  resolution_rows+=("$row")
+  case "$action" in
+    imported)
+      count_imported=$((count_imported + 1))
+      update_counters_for_method "$method"
+      ;;
+    dry-run)
+      count_dry_run=$((count_dry_run + 1))
+      update_counters_for_method "$method"
+      ;;
+    skip-existing)
+      count_skipped=$((count_skipped + 1))
+      update_counters_for_method "$method"
+      ;;
+    not-found)
+      count_unresolved=$((count_unresolved + 1))
+      ;;
+  esac
+
   if [[ "$DEBUG_MAPPING" -eq 1 ]]; then
-    IFS=$'\t' read -r local_skill upstream method status <<< "$row"
-    log_info "[mapping] local=${local_skill} upstream=${upstream} metodo=${method} estado=${status}"
+    print_debug_row "$local_skill" "$upstream_repo" "$upstream_path" "$method" "$action"
+  else
+    print_compact "$local_skill" "$upstream_repo" "$upstream_path" "$method" "$action"
   fi
 }
 
-for s in "${marketing_skills[@]}"; do
-  result=$(copy_skill_snapshot "$s" "marketingskills" || true)
-  if [[ -n "$result" ]]; then
-    report_resolution "$result"
-    status=$(echo "$result" | cut -f4)
-    case "$status" in
-      resolved) imported=$((imported+1)) ;;
-      skipped-existing) skipped=$((skipped+1)) ;;
-    esac
+marketing_skills=(
+  seo-audit
+  ai-seo
+  site-architecture
+  programmatic-seo
+  schema-markup
+  competitor-alternatives
+  page-cro
+  signup-flow-cro
+  onboarding-cro
+  form-cro
+  popup-cro
+  paywall-upgrade-cro
+  copywriting
+  copy-editing
+  cold-email
+  email-sequence
+  social-content
+  paid-ads
+  ad-creative
+  analytics-tracking
+  ab-test-setup
+  churn-prevention
+  free-tool-strategy
+  referral-program
+  revops
+  sales-enablement
+  launch-strategy
+  pricing-strategy
+  marketing-ideas
+  marketing-psychology
+)
+
+motion_skills=(
+  motion-designer
+  svg-animation-engineer
+  apple-ui-skills
+  elevated-design
+  video-motion-graphics
+  dramatic-2000ms-plus
+)
+
+load_aliases
+
+# Preflight útil
+for repo in marketingskills animation-principles design-skills; do
+  base="${REPO_BASE[$repo]:-}"
+  [[ -z "$base" ]] && continue
+  if has_skills_dir "$repo"; then
+    log_info "Snapshot detectado para ${repo}: ${base}/skills"
   else
-    unresolved=$((unresolved+1))
-    report_resolution "$(printf "%s\t%s\t%s\t%s" "$s" "-" "unresolved" "unresolved")"
-    log_warn "No resuelto local=${s} repo=marketingskills"
+    log_warn "Snapshot sin subárbol skills/ para ${repo}: ${base}"
   fi
 done
 
-for s in "${motion_skills[@]}"; do
-  result=$(copy_skill_snapshot "$s" "animation-principles" || true)
-  if [[ -z "$result" ]]; then
-    result=$(copy_skill_snapshot "$s" "design-skills" || true)
-  fi
+if [[ "$DEBUG_MAPPING" -eq 1 ]]; then
+  print_debug_header
+fi
 
-  if [[ -n "$result" ]]; then
-    report_resolution "$result"
-    status=$(echo "$result" | cut -f4)
-    case "$status" in
-      resolved) imported=$((imported+1)) ;;
-      skipped-existing) skipped=$((skipped+1)) ;;
-    esac
-  else
-    unresolved=$((unresolved+1))
-    report_resolution "$(printf "%s\t%s\t%s\t%s" "$s" "-" "unresolved" "unresolved")"
-    log_warn "No resuelto local=${s} repo=motion"
-  fi
+for skill in "${marketing_skills[@]}"; do
+  row="$(import_skill "$skill" marketingskills)"
+  process_result_row "$row"
 done
 
-log_info "Importación finalizada. resolved=${imported}, skipped=${skipped}, unresolved=${unresolved}"
+for skill in "${motion_skills[@]}"; do
+  row="$(import_skill "$skill" animation-principles design-skills)"
+  process_result_row "$row"
+done
+
+log_info "Importación finalizada."
+log_info "exact=${count_exact}, nested=${count_nested}, alias=${count_alias}, unresolved=${count_unresolved}"
+log_info "imported=${count_imported}, dry-run=${count_dry_run}, skipped=${count_skipped}, unresolved=${count_unresolved}"
+
 if [[ "$DRY_RUN" -eq 1 ]]; then
   log_info "Modo dry-run: no se escribieron archivos"
 else
   log_info "Registro: ${STATE_FILE}"
-  log_info "Siguiente paso: ./scripts/verify.sh y revisión manual de docs/skills-map.md"
-fi
-
-if [[ "$DEBUG_MAPPING" -eq 1 ]]; then
-  echo ""
-  echo "Resumen mapping (local\tupstream\tmetodo\testado):"
-  for row in "${resolution_rows[@]}"; do
-    echo "$row"
-  done
 fi

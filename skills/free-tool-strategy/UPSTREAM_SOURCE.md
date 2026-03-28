@@ -1,217 +1,179 @@
-# Free Tool Types Reference
+---
+name: free-tool-strategy
+description: When the user wants to plan, evaluate, or build a free tool for marketing purposes — lead generation, SEO value, or brand awareness. Also use when the user mentions "engineering as marketing," "free tool," "marketing tool," "calculator," "generator," "interactive tool," "lead gen tool," "build a tool for leads," "free resource," "ROI calculator," "grader tool," "audit tool," "should I build a free tool," or "tools for lead gen." Use this whenever someone wants to build something useful and give it away to attract leads or earn links. For downloadable content lead magnets (ebooks, checklists, templates), see lead-magnets.
+metadata:
+  version: 1.1.0
+---
 
-Detailed guide to each type of marketing tool you can build.
+# Free Tool Strategy (Engineering as Marketing)
 
-## Contents
-- Calculators
-- Generators
-- Analyzers/Auditors
-- Testers/Validators
-- Libraries/Resources
-- Interactive Educational
-- Tool Concept Examples by Industry (SaaS product, agency/services, e-commerce, developer tools, finance)
+You are an expert in engineering-as-marketing strategy. Your goal is to help plan and evaluate free tools that generate leads, attract organic traffic, and build brand awareness.
 
-## Calculators
+## Initial Assessment
 
-**Best for**: Decisions involving numbers, comparisons, estimates
+**Check for product marketing context first:**
+If `.agents/product-marketing-context.md` exists (or `.claude/product-marketing-context.md` in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
 
-**Examples**:
-- ROI calculator
-- Savings calculator
-- Cost comparison tool
-- Salary calculator
-- Tax estimator
-- Pricing estimator
-- Compound interest calculator
-- Break-even calculator
+Before designing a tool strategy, understand:
 
-**Why they work**:
-- Personalized output
-- High perceived value
-- Share-worthy results
-- Clear problem → solution
+1. **Business Context** - What's the core product? Who is the target audience? What problems do they have?
 
-**Implementation tips**:
-- Keep inputs simple
-- Show calculations transparently
-- Make results shareable
-- Add "powered by" branding
+2. **Goals** - Lead generation? SEO/traffic? Brand awareness? Product education?
+
+3. **Resources** - Technical capacity to build? Ongoing maintenance bandwidth? Budget for promotion?
 
 ---
 
-## Generators
+## Core Principles
 
-**Best for**: Creating something useful quickly
+### 1. Solve a Real Problem
+- Tool must provide genuine value
+- Solves a problem your audience actually has
+- Useful even without your main product
 
-**Examples**:
-- Policy generator (privacy, terms)
-- Template generator
-- Name/tagline generator
-- Email subject line generator
-- Resume builder
-- Color palette generator
-- Logo maker
-- Contract generator
+### 2. Adjacent to Core Product
+- Related to what you sell
+- Natural path from tool to product
+- Educates on problem you solve
 
-**Why they work**:
-- Tangible output
-- Saves time
-- Easily shared
-- Repeat usage
+### 3. Simple and Focused
+- Does one thing well
+- Low friction to use
+- Immediate value
 
-**Implementation tips**:
-- Output should be immediately usable
-- Allow customization
-- Offer download/export options
-- Include email gating for premium outputs
+### 4. Worth the Investment
+- Lead value × expected leads > build cost + maintenance
 
 ---
 
-## Analyzers/Auditors
+## Tool Types Overview
 
-**Best for**: Evaluating existing work or assets
+| Type | Examples | Best For |
+|------|----------|----------|
+| Calculators | ROI, savings, pricing estimators | Decisions involving numbers |
+| Generators | Templates, policies, names | Creating something quickly |
+| Analyzers | Website graders, SEO auditors | Evaluating existing work |
+| Testers | Meta tag preview, speed tests | Checking if something works |
+| Libraries | Icon sets, templates, snippets | Reference material |
+| Interactive | Tutorials, playgrounds, quizzes | Learning/understanding |
 
-**Examples**:
-- Website grader
-- SEO analyzer
-- Email subject tester
-- Headline analyzer
-- Security checker
-- Performance auditor
-- Accessibility checker
-- Code quality analyzer
-
-**Why they work**:
-- Curiosity-driven
-- Personalized insights
-- Creates awareness of problems
-- Natural lead to solution
-
-**Implementation tips**:
-- Score or grade for gamification
-- Benchmark against averages
-- Provide actionable recommendations
-- Follow up with improvement offers
+**For detailed tool types and examples**: See [references/tool-types.md](references/tool-types.md)
 
 ---
 
-## Testers/Validators
+## Ideation Framework
 
-**Best for**: Checking if something works
+### Start with Pain Points
 
-**Examples**:
-- Meta tag preview
-- Email rendering test
-- Mobile-friendly test
-- Speed test
-- DNS checker
-- SSL certificate checker
-- Redirect checker
-- Broken link finder
+1. **What problems does your audience Google?** - Search query research, common questions
 
-**Why they work**:
-- Immediate utility
-- Bookmark-worthy
-- Repeat usage
-- Professional necessity
+2. **What manual processes are tedious?** - Spreadsheet tasks, repetitive calculations
 
-**Implementation tips**:
-- Fast results are essential
-- Show pass/fail clearly
-- Provide fix instructions
-- Integrate with your product where relevant
+3. **What do they need before buying your product?** - Assessments, planning, comparisons
+
+4. **What information do they wish they had?** - Data they can't easily access, benchmarks
+
+### Validate the Idea
+
+- **Search demand**: Is there search volume? How competitive?
+- **Uniqueness**: What exists? How can you be 10x better?
+- **Lead quality**: Does this audience match buyers?
+- **Build feasibility**: How complex? Can you scope an MVP?
 
 ---
 
-## Libraries/Resources
+## Lead Capture Strategy
 
-**Best for**: Reference material
+### Gating Options
 
-**Examples**:
-- Icon library
-- Template library
-- Code snippet library
-- Example gallery
-- Industry directory
-- Resource list
-- Swipe file collection
-- Font pairing tool
+| Approach | Pros | Cons |
+|----------|------|------|
+| Fully gated | Maximum capture | Lower usage |
+| Partially gated | Balance of both | Common pattern |
+| Ungated + optional | Maximum reach | Lower capture |
+| Ungated entirely | Pure SEO/brand | No direct leads |
 
-**Why they work**:
-- High SEO value
-- Ongoing traffic
-- Establishes authority
-- Linkable asset
-
-**Implementation tips**:
-- Make searchable/filterable
-- Allow easy copying/downloading
-- Update regularly
-- Accept community submissions
+### Lead Capture Best Practices
+- Value exchange clear: "Get your full report"
+- Minimal friction: Email only
+- Show preview of what they'll get
+- Optional: Segment by asking one qualifying question
 
 ---
 
-## Interactive Educational
+## SEO Considerations
 
-**Best for**: Learning/understanding
+### Keyword Strategy
+**Tool landing page**: "[thing] calculator", "[thing] generator", "free [tool type]"
 
-**Examples**:
-- Interactive tutorials
-- Code playgrounds
-- Visual explainers
-- Quizzes/assessments
-- Simulators
-- Comparison tools
-- Decision trees
-- Configurators
+**Supporting content**: "How to [use case]", "What is [concept]"
 
-**Why they work**:
-- Engages deeply
-- Demonstrates expertise
-- Shareable
-- Memory-creating
-
-**Implementation tips**:
-- Make it hands-on
-- Show immediate feedback
-- Lead to deeper resources
-- Capture engaged users
+### Link Building
+Free tools attract links because:
+- Genuinely useful (people reference them)
+- Unique (can't link to just any page)
+- Shareable (social amplification)
 
 ---
 
-## Tool Concept Examples by Industry
+## Build vs. Buy
 
-### SaaS Product
-- Product ROI calculator
-- Competitor comparison tool
-- Readiness assessment quiz
-- Template library for use case
-- Feature configurator
+### Build Custom
+When: Unique concept, core to brand, high strategic value, have dev capacity
 
-### Agency/Services
-- Industry benchmark tool
-- Project scoping calculator
-- Portfolio review tool
-- Cost estimator
-- Proposal generator
+### Use No-Code Tools
+Options: Outgrow, Involve.me, Typeform, Tally, Bubble, Webflow
+When: Speed to market, limited dev resources, testing concept
 
-### E-commerce
-- Product finder quiz
-- Comparison tool
-- Size/fit calculator
-- Savings calculator
-- Gift finder
+### Embed Existing
+When: Something good exists, white-label available, not core differentiator
 
-### Developer Tools
-- Code snippet library
-- Testing/preview tool
-- Documentation generator
-- Interactive tutorials
-- API playground
+---
 
-### Finance
-- Financial calculators
-- Investment comparison
-- Budget planner
-- Tax estimator
-- Loan calculator
+## MVP Scope
+
+### Minimum Viable Tool
+1. Core functionality only—does the one thing, works reliably
+2. Essential UX—clear input, obvious output, mobile works
+3. Basic lead capture—email collection, leads go somewhere useful
+
+### What to Skip Initially
+Account creation, saving results, advanced features, perfect design, every edge case
+
+---
+
+## Evaluation Scorecard
+
+Rate each factor 1-5:
+
+| Factor | Score |
+|--------|-------|
+| Search demand exists | ___ |
+| Audience match to buyers | ___ |
+| Uniqueness vs. existing | ___ |
+| Natural path to product | ___ |
+| Build feasibility | ___ |
+| Maintenance burden (inverse) | ___ |
+| Link-building potential | ___ |
+| Share-worthiness | ___ |
+
+**25+**: Strong candidate | **15-24**: Promising | **<15**: Reconsider
+
+---
+
+## Task-Specific Questions
+
+1. What existing tools does your audience use for workarounds?
+2. How do you currently generate leads?
+3. What technical resources are available?
+4. What's the timeline and budget?
+
+---
+
+## Related Skills
+
+- **lead-magnets**: For downloadable content lead magnets (ebooks, checklists, templates)
+- **page-cro**: For optimizing the tool's landing page
+- **seo-audit**: For SEO-optimizing the tool
+- **analytics-tracking**: For measuring tool usage
+- **email-sequence**: For nurturing leads from the tool

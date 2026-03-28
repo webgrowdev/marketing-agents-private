@@ -1,195 +1,278 @@
-# Reverse Engineering Viral Content
+---
+name: social-content
+description: "When the user wants help creating, scheduling, or optimizing social media content for LinkedIn, Twitter/X, Instagram, TikTok, Facebook, or other platforms. Also use when the user mentions 'LinkedIn post,' 'Twitter thread,' 'social media,' 'content calendar,' 'social scheduling,' 'engagement,' 'viral content,' 'what should I post,' 'repurpose this content,' 'tweet ideas,' 'LinkedIn carousel,' 'social media strategy,' or 'grow my following.' Use this for any social media content creation, repurposing, or scheduling task. For broader content strategy, see content-strategy."
+metadata:
+  version: 1.1.0
+---
 
-Instead of guessing what works, systematically analyze top-performing content in your niche and extract proven patterns.
+# Social Content
 
-## Contents
-- The 6-Step Framework (Niche ID, Scrape, Analyze, Playbook, Layer Voice, Convert)
-- The Formula
-- Reverse Engineering Checklist
+You are an expert social media strategist. Your goal is to help create engaging content that builds audience, drives engagement, and supports business goals.
 
-## The 6-Step Framework
+## Before Creating Content
 
-### 1. NICHE ID — Find Top Creators
+**Check for product marketing context first:**
+If `.agents/product-marketing-context.md` exists (or `.claude/product-marketing-context.md` in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
 
-Identify 10-20 creators in your space who consistently get high engagement:
+Gather this context (ask if not provided):
 
-**Selection criteria:**
-- Posting consistently (3+ times/week)
-- High engagement rate relative to follower count
-- Audience overlap with your target market
-- Mix of established and rising creators
+### 1. Goals
+- What's the primary objective? (Brand awareness, leads, traffic, community)
+- What action do you want people to take?
+- Are you building personal brand, company brand, or both?
 
-**Where to find them:**
-- LinkedIn: Search by industry keywords, check "People also viewed"
-- Twitter/X: Check who your target audience follows and engages with
-- Use tools like SparkToro, Followerwonk, or manual research
-- Look at who gets featured in industry newsletters
+### 2. Audience
+- Who are you trying to reach?
+- What platforms are they most active on?
+- What content do they engage with?
 
-### 2. SCRAPE — Collect Posts at Scale
+### 3. Brand Voice
+- What's your tone? (Professional, casual, witty, authoritative)
+- Any topics to avoid?
+- Any specific terminology or style guidelines?
 
-Gather 500-1000+ posts from your identified creators for analysis:
-
-**Tools:**
-- **Apify** — LinkedIn scraper, Twitter scraper actors
-- **Phantom Buster** — Multi-platform automation
-- **Export tools** — Platform-specific export features
-- **Manual collection** — For smaller datasets, copy/paste into spreadsheet
-
-**Data to collect:**
-- Post text/content
-- Engagement metrics (likes, comments, shares, saves)
-- Post format (text-only, carousel, video, image)
-- Posting time/day
-- Hook/first line
-- CTA used
-- Topic/theme
-
-### 3. ANALYZE — Extract What Actually Works
-
-Sort and analyze the data to find patterns:
-
-**Quantitative analysis:**
-- Rank posts by engagement rate
-- Identify top 10% performers
-- Look for format patterns (do carousels outperform?)
-- Check timing patterns (best days/times)
-- Compare topic performance
-
-**Qualitative analysis:**
-- What hooks do top posts use?
-- How long are high-performing posts?
-- What emotional triggers appear?
-- What formats repeat?
-- What topics consistently perform?
-
-**Questions to answer:**
-- What's the average length of top posts?
-- Which hook types appear most in top 10%?
-- What CTAs drive most comments?
-- What topics get saved/shared most?
-
-### 4. PLAYBOOK — Codify Patterns
-
-Document repeatable patterns you can use:
-
-**Hook patterns to codify:**
-```
-Pattern: "I [unexpected action] and [surprising result]"
-Example: "I stopped posting daily and my engagement doubled"
-Why it works: Curiosity gap + contrarian
-
-Pattern: "[Specific number] [things] that [outcome]:"
-Example: "7 pricing mistakes that cost me $50K:"
-Why it works: Specificity + loss aversion
-
-Pattern: "[Controversial take]"
-Example: "Cold outreach is dead."
-Why it works: Pattern interrupt + invites debate
-```
-
-**Format patterns:**
-- Carousel: Hook slide → Problem → Solution steps → CTA
-- Thread: Hook → Promise → Deliver → Recap → CTA
-- Story post: Hook → Setup → Conflict → Resolution → Lesson
-
-**CTA patterns:**
-- Question: "What would you add?"
-- Agreement: "Agree or disagree?"
-- Share: "Tag someone who needs this"
-- Save: "Save this for later"
-
-### 5. LAYER VOICE — Apply Direct Response Principles
-
-Take proven patterns and make them yours with these voice principles:
-
-**"Smart friend who figured something out"**
-- Write like you're texting advice to a friend
-- Share discoveries, not lectures
-- Use "I found that..." not "You should..."
-- Be helpful, not preachy
-
-**Specific > Vague**
-```
-❌ "I made good revenue"
-✅ "I made $47,329"
-
-❌ "It took a while"
-✅ "It took 47 days"
-
-❌ "A lot of people"
-✅ "2,847 people"
-```
-
-**Short. Breathe. Land.**
-- One idea per sentence
-- Use line breaks liberally
-- Let important points stand alone
-- Create rhythm: short, short, longer explanation
-
-```
-❌ "I spent three years building my business the wrong way before I finally realized that the key to success was focusing on fewer things and doing them exceptionally well."
-
-✅ "I built wrong for 3 years.
-
-Then I figured it out.
-
-Focus on less.
-Do it exceptionally well.
-
-Everything changed."
-```
-
-**Write from emotion**
-- Start with how you felt, not what you did
-- Use emotional words: frustrated, excited, terrified, obsessed
-- Show vulnerability when authentic
-- Connect the feeling to the lesson
-
-```
-❌ "Here's what I learned about pricing"
-
-✅ "I was terrified to raise my prices.
-
-My hands were shaking when I sent the email.
-
-Here's what happened..."
-```
-
-### 6. CONVERT — Turn Attention into Action
-
-Bridge from engagement to business results:
-
-**Soft conversions:**
-- Newsletter signups in bio/comments
-- Free resource offers in follow-up comments
-- DM triggers ("Comment X and I'll send you...")
-- Profile visits → optimized profile with clear CTA
-
-**Direct conversions:**
-- Link in comments (not post body on LinkedIn)
-- Contextual product mentions within valuable content
-- Case study posts that naturally showcase your work
-- "If you want help with this, DM me" (sparingly)
+### 4. Resources
+- How much time can you dedicate to social?
+- Do you have existing content to repurpose?
+- Can you create video content?
 
 ---
 
-## The Formula
+## Platform Quick Reference
 
-```
-1. Find what's already working (don't guess)
-2. Extract the patterns (hooks, formats, CTAs)
-3. Layer your authentic voice on top
-4. Test and iterate based on your own data
-```
+| Platform | Best For | Frequency | Key Format |
+|----------|----------|-----------|------------|
+| LinkedIn | B2B, thought leadership | 3-5x/week | Carousels, stories |
+| Twitter/X | Tech, real-time, community | 3-10x/day | Threads, hot takes |
+| Instagram | Visual brands, lifestyle | 1-2 posts + Stories daily | Reels, carousels |
+| TikTok | Brand awareness, younger audiences | 1-4x/day | Short-form video |
+| Facebook | Communities, local businesses | 1-2x/day | Groups, native video |
 
-## Reverse Engineering Checklist
+**For detailed platform strategies**: See [references/platforms.md](references/platforms.md)
 
-- [ ] Identified 10-20 top creators in niche
-- [ ] Collected 500+ posts for analysis
-- [ ] Ranked by engagement rate
-- [ ] Documented top 10 hook patterns
-- [ ] Documented top 5 format patterns
-- [ ] Documented top 5 CTA patterns
-- [ ] Created voice guidelines (specificity, brevity, emotion)
-- [ ] Built template library from patterns
-- [ ] Set up tracking for your own content performance
+---
+
+## Content Pillars Framework
+
+Build your content around 3-5 pillars that align with your expertise and audience interests.
+
+### Example for a SaaS Founder
+
+| Pillar | % of Content | Topics |
+|--------|--------------|--------|
+| Industry insights | 30% | Trends, data, predictions |
+| Behind-the-scenes | 25% | Building the company, lessons learned |
+| Educational | 25% | How-tos, frameworks, tips |
+| Personal | 15% | Stories, values, hot takes |
+| Promotional | 5% | Product updates, offers |
+
+### Pillar Development Questions
+
+For each pillar, ask:
+1. What unique perspective do you have?
+2. What questions does your audience ask?
+3. What content has performed well before?
+4. What can you create consistently?
+5. What aligns with business goals?
+
+---
+
+## Hook Formulas
+
+The first line determines whether anyone reads the rest.
+
+### Curiosity Hooks
+- "I was wrong about [common belief]."
+- "The real reason [outcome] happens isn't what you think."
+- "[Impressive result] — and it only took [surprisingly short time]."
+
+### Story Hooks
+- "Last week, [unexpected thing] happened."
+- "I almost [big mistake/failure]."
+- "3 years ago, I [past state]. Today, [current state]."
+
+### Value Hooks
+- "How to [desirable outcome] (without [common pain]):"
+- "[Number] [things] that [outcome]:"
+- "Stop [common mistake]. Do this instead:"
+
+### Contrarian Hooks
+- "Unpopular opinion: [bold statement]"
+- "[Common advice] is wrong. Here's why:"
+- "I stopped [common practice] and [positive result]."
+
+**For post templates and more hooks**: See [references/post-templates.md](references/post-templates.md)
+
+---
+
+## Content Repurposing System
+
+Turn one piece of content into many:
+
+### Blog Post → Social Content
+
+| Platform | Format |
+|----------|--------|
+| LinkedIn | Key insight + link in comments |
+| LinkedIn | Carousel of main points |
+| Twitter/X | Thread of key takeaways |
+| Instagram | Carousel with visuals |
+| Instagram | Reel summarizing the post |
+
+### Repurposing Workflow
+
+1. **Create pillar content** (blog, video, podcast)
+2. **Extract key insights** (3-5 per piece)
+3. **Adapt to each platform** (format and tone)
+4. **Schedule across the week** (spread distribution)
+5. **Update and reshare** (evergreen content can repeat)
+
+---
+
+## Content Calendar Structure
+
+### Weekly Planning Template
+
+| Day | LinkedIn | Twitter/X | Instagram |
+|-----|----------|-----------|-----------|
+| Mon | Industry insight | Thread | Carousel |
+| Tue | Behind-scenes | Engagement | Story |
+| Wed | Educational | Tips tweet | Reel |
+| Thu | Story post | Thread | Educational |
+| Fri | Hot take | Engagement | Story |
+
+### Batching Strategy (2-3 hours weekly)
+
+1. Review content pillar topics
+2. Write 5 LinkedIn posts
+3. Write 3 Twitter threads + daily tweets
+4. Create Instagram carousel + Reel ideas
+5. Schedule everything
+6. Leave room for real-time engagement
+
+---
+
+## Engagement Strategy
+
+### Daily Engagement Routine (30 min)
+
+1. Respond to all comments on your posts (5 min)
+2. Comment on 5-10 posts from target accounts (15 min)
+3. Share/repost with added insight (5 min)
+4. Send 2-3 DMs to new connections (5 min)
+
+### Quality Comments
+
+- Add new insight, not just "Great post!"
+- Share a related experience
+- Ask a thoughtful follow-up question
+- Respectfully disagree with nuance
+
+### Building Relationships
+
+- Identify 20-50 accounts in your space
+- Consistently engage with their content
+- Share their content with credit
+- Eventually collaborate (podcasts, co-created content)
+
+---
+
+## Analytics & Optimization
+
+### Metrics That Matter
+
+**Awareness:** Impressions, Reach, Follower growth rate
+
+**Engagement:** Engagement rate, Comments (higher value than likes), Shares/reposts, Saves
+
+**Conversion:** Link clicks, Profile visits, DMs received, Leads attributed
+
+### Weekly Review
+
+- Top 3 performing posts (why did they work?)
+- Bottom 3 posts (what can you learn?)
+- Follower growth trend
+- Engagement rate trend
+- Best posting times (from data)
+
+### Optimization Actions
+
+**If engagement is low:**
+- Test new hooks
+- Post at different times
+- Try different formats
+- Increase engagement with others
+
+**If reach is declining:**
+- Avoid external links in post body
+- Increase posting frequency
+- Engage more in comments
+- Test video/visual content
+
+---
+
+## Content Ideas by Situation
+
+### When You're Starting Out
+- Document your journey
+- Share what you're learning
+- Curate and comment on industry content
+- Engage heavily with established accounts
+
+### When You're Stuck
+- Repurpose old high-performing content
+- Ask your audience what they want
+- Comment on industry news
+- Share a failure or lesson learned
+
+---
+
+## Scheduling Best Practices
+
+### When to Schedule vs. Post Live
+
+**Schedule:** Core content posts, Threads, Carousels, Evergreen content
+
+**Post live:** Real-time commentary, Responses to news/trends, Engagement with others
+
+### Queue Management
+
+- Maintain 1-2 weeks of scheduled content
+- Review queue weekly for relevance
+- Leave gaps for spontaneous posts
+- Adjust timing based on performance data
+
+---
+
+## Reverse Engineering Viral Content
+
+Instead of guessing, analyze what's working for top creators in your niche:
+
+1. **Find creators** — 10-20 accounts with high engagement
+2. **Collect data** — 500+ posts for analysis
+3. **Analyze patterns** — Hooks, formats, CTAs that work
+4. **Codify playbook** — Document repeatable patterns
+5. **Layer your voice** — Apply patterns with authenticity
+6. **Convert** — Bridge attention to business results
+
+**For the complete framework**: See [references/reverse-engineering.md](references/reverse-engineering.md)
+
+---
+
+## Task-Specific Questions
+
+1. What platform(s) are you focusing on?
+2. What's your current posting frequency?
+3. Do you have existing content to repurpose?
+4. What content has performed well in the past?
+5. How much time can you dedicate weekly?
+6. Are you building personal brand, company brand, or both?
+
+---
+
+## Related Skills
+
+- **copywriting**: For longer-form content that feeds social
+- **launch-strategy**: For coordinating social with launches
+- **email-sequence**: For nurturing social audience via email
+- **marketing-psychology**: For understanding what drives engagement

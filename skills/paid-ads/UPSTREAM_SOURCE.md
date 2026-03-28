@@ -1,277 +1,315 @@
-# Platform Setup Checklists
+---
+name: paid-ads
+description: "When the user wants help with paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), LinkedIn, Twitter/X, or other ad platforms. Also use when the user mentions 'PPC,' 'paid media,' 'ROAS,' 'CPA,' 'ad campaign,' 'retargeting,' 'audience targeting,' 'Google Ads,' 'Facebook ads,' 'LinkedIn ads,' 'ad budget,' 'cost per click,' 'ad spend,' or 'should I run ads.' Use this for campaign strategy, audience targeting, bidding, and optimization. For bulk ad creative generation and iteration, see ad-creative. For landing page optimization, see page-cro."
+metadata:
+  version: 1.1.0
+---
 
-Complete setup checklists for major ad platforms.
+# Paid Ads
 
-## Contents
-- Google Ads Setup (Account Foundation, Conversion Tracking, Analytics Integration, Audience Setup, Campaign Readiness, Ad Extensions, Brand Protection)
-- Meta Ads Setup (Business Manager Foundation, Pixel & Tracking, Domain & Aggregated Events, Audience Setup, Catalog, Creative Assets, Compliance)
-- LinkedIn Ads Setup (Campaign Manager Foundation, Insight Tag & Tracking, Audience Setup, Lead Gen Forms, Document Ads, Creative Assets, Budget Considerations)
-- Twitter/X Ads Setup (Account Foundation, Tracking, Audience Setup, Creative)
-- TikTok Ads Setup (Account Foundation, Pixel & Tracking, Audience Setup, Creative)
-- Universal Pre-Launch Checklist
+You are an expert performance marketer with direct access to ad platform accounts. Your goal is to help create, optimize, and scale paid advertising campaigns that drive efficient customer acquisition.
 
-## Google Ads Setup
+## Before Starting
 
-### Account Foundation
+**Check for product marketing context first:**
+If `.agents/product-marketing-context.md` exists (or `.claude/product-marketing-context.md` in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
 
-- [ ] Google Ads account created and verified
-- [ ] Billing information added
-- [ ] Time zone and currency set correctly
-- [ ] Account access granted to team members
+Gather this context (ask if not provided):
 
-### Conversion Tracking
+### 1. Campaign Goals
+- What's the primary objective? (Awareness, traffic, leads, sales, app installs)
+- What's the target CPA or ROAS?
+- What's the monthly/weekly budget?
+- Any constraints? (Brand guidelines, compliance, geographic)
 
-- [ ] Google tag installed on all pages
-- [ ] Conversion actions created (purchase, lead, signup)
-- [ ] Conversion values assigned (if applicable)
-- [ ] Enhanced conversions enabled
-- [ ] Test conversions firing correctly
-- [ ] Import conversions from GA4 (optional)
+### 2. Product & Offer
+- What are you promoting? (Product, free trial, lead magnet, demo)
+- What's the landing page URL?
+- What makes this offer compelling?
 
-### Analytics Integration
+### 3. Audience
+- Who is the ideal customer?
+- What problem does your product solve for them?
+- What are they searching for or interested in?
+- Do you have existing customer data for lookalikes?
 
-- [ ] Google Analytics 4 linked
-- [ ] Auto-tagging enabled
-- [ ] GA4 audiences available in Google Ads
-- [ ] Cross-domain tracking set up (if multiple domains)
-
-### Audience Setup
-
-- [ ] Remarketing tag verified
-- [ ] Website visitor audiences created:
-  - All visitors (180 days)
-  - Key page visitors (pricing, demo, features)
-  - Converters (for exclusion)
-- [ ] Customer match lists uploaded
-- [ ] Similar audiences enabled
-
-### Campaign Readiness
-
-- [ ] Negative keyword lists created:
-  - Universal negatives (free, jobs, careers, reviews, complaints)
-  - Competitor negatives (if needed)
-  - Irrelevant industry terms
-- [ ] Location targeting set (include/exclude)
-- [ ] Language targeting set
-- [ ] Ad schedule configured (if B2B, business hours)
-- [ ] Device bid adjustments considered
-
-### Ad Extensions
-
-- [ ] Sitelinks (4-6 relevant pages)
-- [ ] Callouts (key benefits, offers)
-- [ ] Structured snippets (features, types, services)
-- [ ] Call extension (if phone leads valuable)
-- [ ] Lead form extension (if using)
-- [ ] Price extensions (if applicable)
-- [ ] Image extensions (where available)
-
-### Brand Protection
-
-- [ ] Brand campaign running (protect branded terms)
-- [ ] Competitor campaigns considered
-- [ ] Brand terms in negative lists for non-brand campaigns
+### 4. Current State
+- Have you run ads before? What worked/didn't?
+- Do you have existing pixel/conversion data?
+- What's your current funnel conversion rate?
 
 ---
 
-## Meta Ads Setup
+## Platform Selection Guide
 
-### Business Manager Foundation
-
-- [ ] Business Manager created
-- [ ] Business verified (if running certain ad types)
-- [ ] Ad account created within Business Manager
-- [ ] Payment method added
-- [ ] Team access configured with proper roles
-
-### Pixel & Tracking
-
-- [ ] Meta Pixel installed on all pages
-- [ ] Standard events configured:
-  - PageView (automatic)
-  - ViewContent (product/feature pages)
-  - Lead (form submissions)
-  - Purchase (conversions)
-  - AddToCart (if e-commerce)
-  - InitiateCheckout (if e-commerce)
-- [ ] Conversions API (CAPI) set up for server-side tracking
-- [ ] Event Match Quality score > 6
-- [ ] Test events in Events Manager
-
-### Domain & Aggregated Events
-
-- [ ] Domain verified in Business Manager
-- [ ] Aggregated Event Measurement configured
-- [ ] Top 8 events prioritized in order of importance
-- [ ] Web events prioritized for iOS 14+ tracking
-
-### Audience Setup
-
-- [ ] Custom audiences created:
-  - Website visitors (all, 30/60/90/180 days)
-  - Key page visitors
-  - Video viewers (25%, 50%, 75%, 95%)
-  - Page/Instagram engagers
-  - Customer list uploaded
-- [ ] Lookalike audiences created (1%, 1-3%)
-- [ ] Saved audiences for common targeting
-
-### Catalog (E-commerce)
-
-- [ ] Product catalog connected
-- [ ] Product feed updating correctly
-- [ ] Catalog sales campaigns enabled
-- [ ] Dynamic product ads configured
-
-### Creative Assets
-
-- [ ] Images in correct sizes:
-  - Feed: 1080x1080 (1:1)
-  - Stories/Reels: 1080x1920 (9:16)
-  - Landscape: 1200x628 (1.91:1)
-- [ ] Videos in correct formats
-- [ ] Ad copy variations ready
-- [ ] UTM parameters in all destination URLs
-
-### Compliance
-
-- [ ] Special Ad Categories declared (if housing, credit, employment, politics)
-- [ ] Landing page complies with Meta policies
-- [ ] No prohibited content in ads
+| Platform | Best For | Use When |
+|----------|----------|----------|
+| **Google Ads** | High-intent search traffic | People actively search for your solution |
+| **Meta** | Demand generation, visual products | Creating demand, strong creative assets |
+| **LinkedIn** | B2B, decision-makers | Job title/company targeting matters, higher price points |
+| **Twitter/X** | Tech audiences, thought leadership | Audience is active on X, timely content |
+| **TikTok** | Younger demographics, viral creative | Audience skews 18-34, video capacity |
 
 ---
 
-## LinkedIn Ads Setup
+## Campaign Structure Best Practices
 
-### Campaign Manager Foundation
+### Account Organization
 
-- [ ] Campaign Manager account created
-- [ ] Company Page connected
-- [ ] Billing information added
-- [ ] Team access configured
+```
+Account
+├── Campaign 1: [Objective] - [Audience/Product]
+│   ├── Ad Set 1: [Targeting variation]
+│   │   ├── Ad 1: [Creative variation A]
+│   │   ├── Ad 2: [Creative variation B]
+│   │   └── Ad 3: [Creative variation C]
+│   └── Ad Set 2: [Targeting variation]
+└── Campaign 2...
+```
 
-### Insight Tag & Tracking
+### Naming Conventions
 
-- [ ] LinkedIn Insight Tag installed on all pages
-- [ ] Tag verified and firing
-- [ ] Conversion tracking configured:
-  - URL-based conversions
-  - Event-specific conversions
-- [ ] Conversion values set (if applicable)
+```
+[Platform]_[Objective]_[Audience]_[Offer]_[Date]
 
-### Audience Setup
+Examples:
+META_Conv_Lookalike-Customers_FreeTrial_2024Q1
+GOOG_Search_Brand_Demo_Ongoing
+LI_LeadGen_CMOs-SaaS_Whitepaper_Mar24
+```
 
-- [ ] Matched Audiences created:
-  - Website retargeting audiences
-  - Company list uploaded (for ABM)
-  - Contact list uploaded
-- [ ] Lookalike audiences created
-- [ ] Saved audiences for common targeting
+### Budget Allocation
 
-### Lead Gen Forms (if using)
+**Testing phase (first 2-4 weeks):**
+- 70% to proven/safe campaigns
+- 30% to testing new audiences/creative
 
-- [ ] Lead gen form templates created
-- [ ] Form fields selected (minimize for conversion)
-- [ ] Privacy policy URL added
-- [ ] Thank you message configured
-- [ ] CRM integration set up (or CSV export process)
-
-### Document Ads (if using)
-
-- [ ] Documents uploaded (PDF, PowerPoint)
-- [ ] Gating configured (full gate or preview)
-- [ ] Lead gen form connected
-
-### Creative Assets
-
-- [ ] Single image ads: 1200x627 (1.91:1) or 1080x1080 (1:1)
-- [ ] Carousel images ready
-- [ ] Video specs met (if using)
-- [ ] Ad copy within character limits:
-  - Intro text: 600 max, 150 recommended
-  - Headline: 200 max, 70 recommended
-
-### Budget Considerations
-
-- [ ] Budget realistic for LinkedIn CPCs ($8-15+ typical)
-- [ ] Audience size validated (50K+ recommended)
-- [ ] Daily vs. lifetime budget decided
-- [ ] Bid strategy selected
+**Scaling phase:**
+- Consolidate budget into winning combinations
+- Increase budgets 20-30% at a time
+- Wait 3-5 days between increases for algorithm learning
 
 ---
 
-## Twitter/X Ads Setup
+## Ad Copy Frameworks
 
-### Account Foundation
+### Key Formulas
 
-- [ ] Ads account created
-- [ ] Payment method added
-- [ ] Account verified (if required)
+**Problem-Agitate-Solve (PAS):**
+> [Problem] → [Agitate the pain] → [Introduce solution] → [CTA]
 
-### Tracking
+**Before-After-Bridge (BAB):**
+> [Current painful state] → [Desired future state] → [Your product as bridge]
 
-- [ ] Twitter Pixel installed
-- [ ] Conversion events created
-- [ ] Website tag verified
+**Social Proof Lead:**
+> [Impressive stat or testimonial] → [What you do] → [CTA]
 
-### Audience Setup
-
-- [ ] Tailored audiences created:
-  - Website visitors
-  - Customer lists
-- [ ] Follower lookalikes identified
-- [ ] Interest and keyword targets researched
-
-### Creative
-
-- [ ] Tweet copy within 280 characters
-- [ ] Images: 1200x675 (1.91:1) or 1200x1200 (1:1)
-- [ ] Video specs met (if using)
-- [ ] Cards configured (website, app, etc.)
+**For detailed templates and headline formulas**: See [references/ad-copy-templates.md](references/ad-copy-templates.md)
 
 ---
 
-## TikTok Ads Setup
+## Audience Targeting Overview
 
-### Account Foundation
+### Platform Strengths
 
-- [ ] TikTok Ads Manager account created
-- [ ] Business verification completed
-- [ ] Payment method added
+| Platform | Key Targeting | Best Signals |
+|----------|---------------|--------------|
+| Google | Keywords, search intent | What they're searching |
+| Meta | Interests, behaviors, lookalikes | Engagement patterns |
+| LinkedIn | Job titles, companies, industries | Professional identity |
 
-### Pixel & Tracking
+### Key Concepts
 
-- [ ] TikTok Pixel installed
-- [ ] Events configured (ViewContent, Purchase, etc.)
-- [ ] Events API set up (recommended)
+- **Lookalikes**: Base on best customers (by LTV), not all customers
+- **Retargeting**: Segment by funnel stage (visitors vs. cart abandoners)
+- **Exclusions**: Exclude existing customers and recent converters — showing ads to people who already bought wastes spend
 
-### Audience Setup
-
-- [ ] Custom audiences created
-- [ ] Lookalike audiences created
-- [ ] Interest categories identified
-
-### Creative
-
-- [ ] Vertical video (9:16) ready
-- [ ] Native-feeling content (not too polished)
-- [ ] First 3 seconds are compelling hooks
-- [ ] Captions added (most watch without sound)
-- [ ] Music/sounds selected (licensed if needed)
+**For detailed targeting strategies by platform**: See [references/audience-targeting.md](references/audience-targeting.md)
 
 ---
 
-## Universal Pre-Launch Checklist
+## Creative Best Practices
 
-Before launching any campaign:
+### Image Ads
+- Clear product screenshots showing UI
+- Before/after comparisons
+- Stats and numbers as focal point
+- Human faces (real, not stock)
+- Bold, readable text overlay (keep under 20%)
 
+### Video Ads Structure (15-30 sec)
+1. Hook (0-3 sec): Pattern interrupt, question, or bold statement
+2. Problem (3-8 sec): Relatable pain point
+3. Solution (8-20 sec): Show product/benefit
+4. CTA (20-30 sec): Clear next step
+
+**Production tips:**
+- Captions always (85% watch without sound)
+- Vertical for Stories/Reels, square for feed
+- Native feel outperforms polished
+- First 3 seconds determine if they watch
+
+### Creative Testing Hierarchy
+1. Concept/angle (biggest impact)
+2. Hook/headline
+3. Visual style
+4. Body copy
+5. CTA
+
+---
+
+## Campaign Optimization
+
+### Key Metrics by Objective
+
+| Objective | Primary Metrics |
+|-----------|-----------------|
+| Awareness | CPM, Reach, Video view rate |
+| Consideration | CTR, CPC, Time on site |
+| Conversion | CPA, ROAS, Conversion rate |
+
+### Optimization Levers
+
+**If CPA is too high:**
+1. Check landing page (is the problem post-click?)
+2. Tighten audience targeting
+3. Test new creative angles
+4. Improve ad relevance/quality score
+5. Adjust bid strategy
+
+**If CTR is low:**
+- Creative isn't resonating → test new hooks/angles
+- Audience mismatch → refine targeting
+- Ad fatigue → refresh creative
+
+**If CPM is high:**
+- Audience too narrow → expand targeting
+- High competition → try different placements
+- Low relevance score → improve creative fit
+
+### Bid Strategy Progression
+1. Start with manual or cost caps
+2. Gather conversion data (50+ conversions)
+3. Switch to automated with targets based on historical data
+4. Monitor and adjust targets based on results
+
+---
+
+## Retargeting Strategies
+
+### Funnel-Based Approach
+
+| Funnel Stage | Audience | Message | Goal |
+|--------------|----------|---------|------|
+| Top | Blog readers, video viewers | Educational, social proof | Move to consideration |
+| Middle | Pricing/feature page visitors | Case studies, demos | Move to decision |
+| Bottom | Cart abandoners, trial users | Urgency, objection handling | Convert |
+
+### Retargeting Windows
+
+| Stage | Window | Frequency Cap |
+|-------|--------|---------------|
+| Hot (cart/trial) | 1-7 days | Higher OK |
+| Warm (key pages) | 7-30 days | 3-5x/week |
+| Cold (any visit) | 30-90 days | 1-2x/week |
+
+### Exclusions to Set Up
+- Existing customers (unless upsell)
+- Recent converters (7-14 day window)
+- Bounced visitors (<10 sec)
+- Irrelevant pages (careers, support)
+
+---
+
+## Reporting & Analysis
+
+### Weekly Review
+- Spend vs. budget pacing
+- CPA/ROAS vs. targets
+- Top and bottom performing ads
+- Audience performance breakdown
+- Frequency check (fatigue risk)
+- Landing page conversion rate
+
+### Attribution Considerations
+- Platform attribution is inflated
+- Use UTM parameters consistently
+- Compare platform data to GA4
+- Look at blended CAC, not just platform CPA
+
+---
+
+## Platform Setup
+
+Before launching campaigns, ensure proper tracking and account setup.
+
+**For complete setup checklists by platform**: See [references/platform-setup-checklists.md](references/platform-setup-checklists.md)
+
+### Universal Pre-Launch Checklist
 - [ ] Conversion tracking tested with real conversion
 - [ ] Landing page loads fast (<3 sec)
 - [ ] Landing page mobile-friendly
 - [ ] UTM parameters working
-- [ ] Budget set correctly (daily vs. lifetime)
-- [ ] Start/end dates correct
+- [ ] Budget set correctly
 - [ ] Targeting matches intended audience
-- [ ] Ad creative approved
-- [ ] Team notified of launch
-- [ ] Reporting dashboard ready
+
+---
+
+## Common Mistakes to Avoid
+
+### Strategy
+- Launching without conversion tracking
+- Too many campaigns (fragmenting budget)
+- Not giving algorithms enough learning time
+- Optimizing for wrong metric
+
+### Targeting
+- Audiences too narrow or too broad
+- Not excluding existing customers
+- Overlapping audiences competing
+
+### Creative
+- Only one ad per ad set
+- Not refreshing creative (fatigue)
+- Mismatch between ad and landing page
+
+### Budget
+- Spreading too thin across campaigns
+- Making big budget changes (disrupts learning)
+- Stopping campaigns during learning phase
+
+---
+
+## Task-Specific Questions
+
+1. What platform(s) are you currently running or want to start with?
+2. What's your monthly ad budget?
+3. What does a successful conversion look like (and what's it worth)?
+4. Do you have existing creative assets or need to create them?
+5. What landing page will ads point to?
+6. Do you have pixel/conversion tracking set up?
+
+---
+
+## Tool Integrations
+
+For implementation, see the [tools registry](../../tools/REGISTRY.md). Key advertising platforms:
+
+| Platform | Best For | MCP | Guide |
+|----------|----------|:---:|-------|
+| **Google Ads** | Search intent, high-intent traffic | ✓ | [google-ads.md](../../tools/integrations/google-ads.md) |
+| **Meta Ads** | Demand gen, visual products, B2C | - | [meta-ads.md](../../tools/integrations/meta-ads.md) |
+| **LinkedIn Ads** | B2B, job title targeting | - | [linkedin-ads.md](../../tools/integrations/linkedin-ads.md) |
+| **TikTok Ads** | Younger demographics, video | - | [tiktok-ads.md](../../tools/integrations/tiktok-ads.md) |
+
+For tracking, see also: [ga4.md](../../tools/integrations/ga4.md), [segment.md](../../tools/integrations/segment.md)
+
+---
+
+## Related Skills
+
+- **ad-creative**: For generating and iterating ad headlines, descriptions, and creative at scale
+- **copywriting**: For landing page copy that converts ad traffic
+- **analytics-tracking**: For proper conversion tracking setup
+- **ab-test-setup**: For landing page testing to improve ROAS
+- **page-cro**: For optimizing post-click conversion rates

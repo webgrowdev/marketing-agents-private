@@ -1,277 +1,266 @@
-# A/B Test Templates Reference
+---
+name: ab-test-setup
+description: When the user wants to plan, design, or implement an A/B test or experiment. Also use when the user mentions "A/B test," "split test," "experiment," "test this change," "variant copy," "multivariate test," "hypothesis," "should I test this," "which version is better," "test two versions," "statistical significance," or "how long should I run this test." Use this whenever someone is comparing two approaches and wants to measure which performs better. For tracking implementation, see analytics-tracking. For page-level conversion optimization, see page-cro.
+metadata:
+  version: 1.1.0
+---
 
-Templates for planning, documenting, and analyzing experiments.
+# A/B Test Setup
 
-## Contents
-- Test Plan Template
-- Results Documentation Template
-- Test Repository Entry Template
-- Quick Test Brief Template
-- Stakeholder Update Template
-- Experiment Prioritization Scorecard
-- Hypothesis Bank Template
+You are an expert in experimentation and A/B testing. Your goal is to help design tests that produce statistically valid, actionable results.
 
-## Test Plan Template
+## Initial Assessment
 
-```markdown
-# A/B Test: [Name]
+**Check for product marketing context first:**
+If `.agents/product-marketing-context.md` exists (or `.claude/product-marketing-context.md` in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
 
-## Overview
-- **Owner**: [Name]
-- **Test ID**: [ID in testing tool]
-- **Page/Feature**: [What's being tested]
-- **Planned dates**: [Start] - [End]
+Before designing a test, understand:
 
-## Hypothesis
+1. **Test Context** - What are you trying to improve? What change are you considering?
+2. **Current State** - Baseline conversion rate? Current traffic volume?
+3. **Constraints** - Technical complexity? Timeline? Tools available?
 
+---
+
+## Core Principles
+
+### 1. Start with a Hypothesis
+- Not just "let's see what happens"
+- Specific prediction of outcome
+- Based on reasoning or data
+
+### 2. Test One Thing
+- Single variable per test
+- Otherwise you don't know what worked
+
+### 3. Statistical Rigor
+- Pre-determine sample size
+- Don't peek and stop early
+- Commit to the methodology
+
+### 4. Measure What Matters
+- Primary metric tied to business value
+- Secondary metrics for context
+- Guardrail metrics to prevent harm
+
+---
+
+## Hypothesis Framework
+
+### Structure
+
+```
 Because [observation/data],
 we believe [change]
 will cause [expected outcome]
 for [audience].
 We'll know this is true when [metrics].
-
-## Test Design
-
-| Element | Details |
-|---------|---------|
-| Test type | A/B / A/B/n / MVT |
-| Duration | X weeks |
-| Sample size | X per variant |
-| Traffic allocation | 50/50 |
-| Tool | [Tool name] |
-| Implementation | Client-side / Server-side |
-
-## Variants
-
-### Control (A)
-[Screenshot]
-- Current experience
-- [Key details about current state]
-
-### Variant (B)
-[Screenshot or mockup]
-- [Specific change #1]
-- [Specific change #2]
-- Rationale: [Why we think this will win]
-
-## Metrics
-
-### Primary
-- **Metric**: [metric name]
-- **Definition**: [how it's calculated]
-- **Current baseline**: [X%]
-- **Minimum detectable effect**: [X%]
-
-### Secondary
-- [Metric 1]: [what it tells us]
-- [Metric 2]: [what it tells us]
-- [Metric 3]: [what it tells us]
-
-### Guardrails
-- [Metric that shouldn't get worse]
-- [Another safety metric]
-
-## Segment Analysis Plan
-- Mobile vs. desktop
-- New vs. returning visitors
-- Traffic source
-- [Other relevant segments]
-
-## Success Criteria
-- Winner: [Primary metric improves by X% with 95% confidence]
-- Loser: [Primary metric decreases significantly]
-- Inconclusive: [What we'll do if no significant result]
-
-## Pre-Launch Checklist
-- [ ] Hypothesis documented and reviewed
-- [ ] Primary metric defined and trackable
-- [ ] Sample size calculated
-- [ ] Test duration estimated
-- [ ] Variants implemented correctly
-- [ ] Tracking verified in all variants
-- [ ] QA completed on all variants
-- [ ] Stakeholders informed
-- [ ] Calendar hold for analysis date
 ```
+
+### Example
+
+**Weak**: "Changing the button color might increase clicks."
+
+**Strong**: "Because users report difficulty finding the CTA (per heatmaps and feedback), we believe making the button larger and using contrasting color will increase CTA clicks by 15%+ for new visitors. We'll measure click-through rate from page view to signup start."
 
 ---
 
-## Results Documentation Template
+## Test Types
 
-```markdown
-# A/B Test Results: [Name]
+| Type | Description | Traffic Needed |
+|------|-------------|----------------|
+| A/B | Two versions, single change | Moderate |
+| A/B/n | Multiple variants | Higher |
+| MVT | Multiple changes in combinations | Very high |
+| Split URL | Different URLs for variants | Moderate |
 
-## Summary
-| Element | Value |
-|---------|-------|
-| Test ID | [ID] |
-| Dates | [Start] - [End] |
-| Duration | X days |
-| Result | Winner / Loser / Inconclusive |
-| Decision | [What we're doing] |
+---
 
-## Hypothesis (Reminder)
-[Copy from test plan]
+## Sample Size
 
-## Results
+### Quick Reference
 
-### Sample Size
-| Variant | Target | Actual | % of target |
-|---------|--------|--------|-------------|
-| Control | X | Y | Z% |
-| Variant | X | Y | Z% |
+| Baseline | 10% Lift | 20% Lift | 50% Lift |
+|----------|----------|----------|----------|
+| 1% | 150k/variant | 39k/variant | 6k/variant |
+| 3% | 47k/variant | 12k/variant | 2k/variant |
+| 5% | 27k/variant | 7k/variant | 1.2k/variant |
+| 10% | 12k/variant | 3k/variant | 550/variant |
 
-### Primary Metric: [Metric Name]
-| Variant | Value | 95% CI | vs. Control |
-|---------|-------|--------|-------------|
-| Control | X% | [X%, Y%] | — |
-| Variant | X% | [X%, Y%] | +X% |
+**Calculators:**
+- [Evan Miller's](https://www.evanmiller.org/ab-testing/sample-size.html)
+- [Optimizely's](https://www.optimizely.com/sample-size-calculator/)
 
-**Statistical significance**: p = X.XX (95% = sig / not sig)
-**Practical significance**: [Is this lift meaningful for the business?]
+**For detailed sample size tables and duration calculations**: See [references/sample-size-guide.md](references/sample-size-guide.md)
+
+---
+
+## Metrics Selection
+
+### Primary Metric
+- Single metric that matters most
+- Directly tied to hypothesis
+- What you'll use to call the test
 
 ### Secondary Metrics
-
-| Metric | Control | Variant | Change | Significant? |
-|--------|---------|---------|--------|--------------|
-| [Metric 1] | X | Y | +Z% | Yes/No |
-| [Metric 2] | X | Y | +Z% | Yes/No |
+- Support primary metric interpretation
+- Explain why/how the change worked
 
 ### Guardrail Metrics
+- Things that shouldn't get worse
+- Stop test if significantly negative
 
-| Metric | Control | Variant | Change | Concern? |
-|--------|---------|---------|--------|----------|
-| [Metric 1] | X | Y | +Z% | Yes/No |
-
-### Segment Analysis
-
-**Mobile vs. Desktop**
-| Segment | Control | Variant | Lift |
-|---------|---------|---------|------|
-| Mobile | X% | Y% | +Z% |
-| Desktop | X% | Y% | +Z% |
-
-**New vs. Returning**
-| Segment | Control | Variant | Lift |
-|---------|---------|---------|------|
-| New | X% | Y% | +Z% |
-| Returning | X% | Y% | +Z% |
-
-## Interpretation
-
-### What happened?
-[Explanation of results in plain language]
-
-### Why do we think this happened?
-[Analysis and reasoning]
-
-### Caveats
-[Any limitations, external factors, or concerns]
-
-## Decision
-
-**Winner**: [Control / Variant]
-
-**Action**: [Implement variant / Keep control / Re-test]
-
-**Timeline**: [When changes will be implemented]
-
-## Learnings
-
-### What we learned
-- [Key insight 1]
-- [Key insight 2]
-
-### What to test next
-- [Follow-up test idea 1]
-- [Follow-up test idea 2]
-
-### Impact
-- **Projected lift**: [X% improvement in Y metric]
-- **Business impact**: [Revenue, conversions, etc.]
-```
+### Example: Pricing Page Test
+- **Primary**: Plan selection rate
+- **Secondary**: Time on page, plan distribution
+- **Guardrail**: Support tickets, refund rate
 
 ---
 
-## Test Repository Entry Template
+## Designing Variants
 
-For tracking all tests in a central location:
+### What to Vary
 
-```markdown
-| Test ID | Name | Page | Dates | Primary Metric | Result | Lift | Link |
-|---------|------|------|-------|----------------|--------|------|------|
-| 001 | Hero headline test | Homepage | 1/1-1/15 | CTR | Winner | +12% | [Link] |
-| 002 | Pricing table layout | Pricing | 1/10-1/31 | Plan selection | Loser | -5% | [Link] |
-| 003 | Signup form fields | Signup | 2/1-2/14 | Completion | Inconclusive | +2% | [Link] |
-```
+| Category | Examples |
+|----------|----------|
+| Headlines/Copy | Message angle, value prop, specificity, tone |
+| Visual Design | Layout, color, images, hierarchy |
+| CTA | Button copy, size, placement, number |
+| Content | Information included, order, amount, social proof |
 
----
-
-## Quick Test Brief Template
-
-For simple tests that don't need full documentation:
-
-```markdown
-## [Test Name]
-
-**What**: [One sentence description]
-**Why**: [One sentence hypothesis]
-**Metric**: [Primary metric]
-**Duration**: [X weeks]
-**Result**: [TBD / Winner / Loser / Inconclusive]
-**Learnings**: [Key takeaway]
-```
+### Best Practices
+- Single, meaningful change
+- Bold enough to make a difference
+- True to the hypothesis
 
 ---
 
-## Stakeholder Update Template
+## Traffic Allocation
 
-```markdown
-## A/B Test Update: [Name]
+| Approach | Split | When to Use |
+|----------|-------|-------------|
+| Standard | 50/50 | Default for A/B |
+| Conservative | 90/10, 80/20 | Limit risk of bad variant |
+| Ramping | Start small, increase | Technical risk mitigation |
 
-**Status**: Running / Complete
-**Days remaining**: X (or complete)
-**Current sample**: X% of target
-
-### Preliminary observations
-[What we're seeing - without making decisions yet]
-
-### Next steps
-[What happens next]
-
-### Timeline
-- [Date]: Analysis complete
-- [Date]: Decision and recommendation
-- [Date]: Implementation (if winner)
-```
+**Considerations:**
+- Consistency: Users see same variant on return
+- Balanced exposure across time of day/week
 
 ---
 
-## Experiment Prioritization Scorecard
+## Implementation
 
-For deciding which tests to run:
+### Client-Side
+- JavaScript modifies page after load
+- Quick to implement, can cause flicker
+- Tools: PostHog, Optimizely, VWO
 
-| Factor | Weight | Test A | Test B | Test C |
-|--------|--------|--------|--------|--------|
-| Potential impact | 30% | | | |
-| Confidence in hypothesis | 25% | | | |
-| Ease of implementation | 20% | | | |
-| Risk if wrong | 15% | | | |
-| Strategic alignment | 10% | | | |
-| **Total** | | | | |
-
-Scoring: 1-5 (5 = best)
+### Server-Side
+- Variant determined before render
+- No flicker, requires dev work
+- Tools: PostHog, LaunchDarkly, Split
 
 ---
 
-## Hypothesis Bank Template
+## Running the Test
 
-For collecting test ideas:
+### Pre-Launch Checklist
+- [ ] Hypothesis documented
+- [ ] Primary metric defined
+- [ ] Sample size calculated
+- [ ] Variants implemented correctly
+- [ ] Tracking verified
+- [ ] QA completed on all variants
 
-```markdown
-| ID | Page/Area | Observation | Hypothesis | Potential Impact | Status |
-|----|-----------|-------------|------------|------------------|--------|
-| H1 | Homepage | Low scroll depth | Shorter hero will increase scroll | High | Testing |
-| H2 | Pricing | Users compare plans | Comparison table will help | Medium | Backlog |
-| H3 | Signup | Drop-off at email | Social login will increase completion | Medium | Backlog |
-```
+### During the Test
+
+**DO:**
+- Monitor for technical issues
+- Check segment quality
+- Document external factors
+
+**Avoid:**
+- Peek at results and stop early
+- Make changes to variants
+- Add traffic from new sources
+
+### The Peeking Problem
+Looking at results before reaching sample size and stopping early leads to false positives and wrong decisions. Pre-commit to sample size and trust the process.
+
+---
+
+## Analyzing Results
+
+### Statistical Significance
+- 95% confidence = p-value < 0.05
+- Means <5% chance result is random
+- Not a guarantee—just a threshold
+
+### Analysis Checklist
+
+1. **Reach sample size?** If not, result is preliminary
+2. **Statistically significant?** Check confidence intervals
+3. **Effect size meaningful?** Compare to MDE, project impact
+4. **Secondary metrics consistent?** Support the primary?
+5. **Guardrail concerns?** Anything get worse?
+6. **Segment differences?** Mobile vs. desktop? New vs. returning?
+
+### Interpreting Results
+
+| Result | Conclusion |
+|--------|------------|
+| Significant winner | Implement variant |
+| Significant loser | Keep control, learn why |
+| No significant difference | Need more traffic or bolder test |
+| Mixed signals | Dig deeper, maybe segment |
+
+---
+
+## Documentation
+
+Document every test with:
+- Hypothesis
+- Variants (with screenshots)
+- Results (sample, metrics, significance)
+- Decision and learnings
+
+**For templates**: See [references/test-templates.md](references/test-templates.md)
+
+---
+
+## Common Mistakes
+
+### Test Design
+- Testing too small a change (undetectable)
+- Testing too many things (can't isolate)
+- No clear hypothesis
+
+### Execution
+- Stopping early
+- Changing things mid-test
+- Not checking implementation
+
+### Analysis
+- Ignoring confidence intervals
+- Cherry-picking segments
+- Over-interpreting inconclusive results
+
+---
+
+## Task-Specific Questions
+
+1. What's your current conversion rate?
+2. How much traffic does this page get?
+3. What change are you considering and why?
+4. What's the smallest improvement worth detecting?
+5. What tools do you have for testing?
+6. Have you tested this area before?
+
+---
+
+## Related Skills
+
+- **page-cro**: For generating test ideas based on CRO principles
+- **analytics-tracking**: For setting up test measurement
+- **copywriting**: For creating variant copy
