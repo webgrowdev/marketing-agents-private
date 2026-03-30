@@ -1,0 +1,38 @@
+runtime: openclaw
+version: 1
+
+agents:
+  - slug: seo-content
+    workspace: workspaces/seo-content
+    binding: agent:seo-content
+  - slug: cro
+    workspace: workspaces/cro
+    binding: agent:cro
+  - slug: content-copy
+    workspace: workspaces/content-copy
+    binding: agent:content-copy
+  - slug: paid-measurement
+    workspace: workspaces/paid-measurement
+    binding: agent:paid-measurement
+  - slug: growth-retention
+    workspace: workspaces/growth-retention
+    binding: agent:growth-retention
+  - slug: sales-gtm
+    workspace: workspaces/sales-gtm
+    binding: agent:sales-gtm
+  - slug: strategy
+    workspace: workspaces/strategy
+    binding: agent:strategy
+  - slug: motion-pro
+    workspace: workspaces/motion-pro
+    binding: agent:motion-pro
+  - slug: marketing-pm
+    workspace: workspaces/marketing-pm
+    binding: agent:marketing-pm
+  - slug: executive-reporter
+    workspace: workspaces/executive-reporter
+    binding: agent:executive-reporter
+
+hooks:
+  taskDispatchEndpoint: /hooks/agent-task
+  callbackEndpoint: /tasks/{taskId}/openclaw-result

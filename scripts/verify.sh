@@ -9,9 +9,12 @@ errors=0
 
 must_exist=(
   README.md LICENSE_NOTES.md Makefile
-  docs/architecture.md docs/agents.md docs/skills-map.md docs/upstream-sources.md docs/security.md docs/maintenance.md docs/deployment.md docs/placeholders.md
+  docs/architecture.md docs/agents.md docs/skills-map.md docs/upstream-sources.md docs/security.md docs/maintenance.md docs/deployment.md docs/placeholders.md docs/runbook-openclaw-vps.md
   shared/product-marketing-context.md
-  scripts/install.sh scripts/import_upstream_snapshots.sh scripts/sync_to_openclaw.sh scripts/resolve_pr_conflicts.sh scripts/verify.sh scripts/backup.sh scripts/lib.sh
+  scripts/install.sh scripts/install_stack.sh scripts/start_stack.sh scripts/verify.sh scripts/verify_stack.sh scripts/import_upstream_snapshots.sh scripts/sync_to_openclaw.sh scripts/resolve_pr_conflicts.sh scripts/backup.sh scripts/lib.sh
+  orchestrator/package.json orchestrator/prisma/schema.prisma orchestrator/src/main.ts
+  dashboard/package.json dashboard/src/app/ceo/page.tsx
+  openclaw/agents.registry.yaml
 )
 
 for f in "${must_exist[@]}"; do
@@ -30,7 +33,7 @@ for d in "${ROOT}/skills"/*; do
   fi
 done
 
-for a in seo-content cro content-copy paid-measurement growth-retention sales-gtm strategy motion-pro; do
+for a in seo-content cro content-copy paid-measurement growth-retention sales-gtm strategy motion-pro marketing-pm executive-reporter; do
   for af in README.md IDENTITY.md AGENTS.md SOUL.md; do
     [[ -f "${ROOT}/agents/${a}/${af}" ]] || { log_error "Agente ${a} incompleto: falta ${af}"; errors=$((errors+1)); }
   done

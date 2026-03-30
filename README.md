@@ -1,55 +1,38 @@
 # marketing-agents-private
 
-Repositorio privado curado para operar agentes de marketing en OpenClaw con control total de cambios, trazabilidad y aislamiento por agente.
+Stack de agencia de marketing multiagente listo para producción sobre OpenClaw, con orquestación central, observabilidad, reporting por Telegram y dashboard ejecutivo.
 
-## Estado real de curación
-Este entorno no tiene acceso saliente confiable a GitHub (error `403 CONNECT tunnel failed`). Por diseño, **no se finge curación**: los skills están listos para importación offline/manual asistida.
+## Componentes
+- `agents/`: 8 agentes originales + `marketing-pm` + `executive-reporter`.
+- `openclaw/agents.registry.yaml`: registro de bindings/sesiones/workspaces.
+- `orchestrator/`: API Express + BullMQ + Prisma + scheduler + Telegram.
+- `dashboard/`: Next.js + Tailwind (CEO, PM, agentes, actividad, métricas).
+- `scripts/`: instalación, arranque, verificación y sync.
+- `docs/runbook-openclaw-vps.md`: guía paso a paso desde cero.
 
-## Por qué existe
-- Evitar dependencia directa de upstream en producción.
-- Mantener una base estable y auditada para operación en VPS.
-- Permitir customizaciones internas sin perder trazabilidad.
-
-## Estructura
-- `agents/`: 8 agentes listos para OpenClaw.
-- `skills/`: skills en estado placeholder/importables offline.
-- `shared/`: contexto común reusable.
-- `scripts/`: install, verify, import snapshots, sync y backup.
-- `docs/`: arquitectura, seguridad, mantenimiento y fuentes.
-
-## Flujo recomendado sin acceso remoto desde Codex
-1. Descargar snapshots locales de upstream en una máquina con internet.
-2. Ejecutar importación offline/manual asistida (con mapping y diagnóstico opcional):
-   ```bash
-   ./scripts/import_upstream_snapshots.sh \
-     --dry-run --debug-mapping \
-     --marketingskills /path/to/marketingskills \
-     --animation-principles /path/to/animation-principles \
-     --design-skills /path/to/design-skills
-   ```
-   El importador resuelve cada slug local por este orden: **exact match → alias match → normalized/fuzzy match → unresolved**.
-   Cuando el resultado sea correcto, repetir sin `--dry-run` (y usar `--force-overwrite` solo si querés reemplazar `UPSTREAM_SOURCE.md` existentes).
-3. Verificar estructura y estados:
-   ```bash
-   ./scripts/verify.sh
-   ```
-4. Sincronizar a OpenClaw:
-   ```bash
-   ./scripts/sync_to_openclaw.sh --target-base ~/.openclaw
-   ```
-
-## Agentes incluidos
-`seo-content`, `cro`, `content-copy`, `paid-measurement`, `growth-retention`, `sales-gtm`, `strategy`, `motion-pro`.
-
-## Motion skills objetivo (completo)
-`motion-designer`, `svg-animation-engineer`, `apple-ui-skills`, `elevated-design`, `video-motion-graphics`, `dramatic-2000ms-plus`.
-
-## Mantenimiento
-Ver `docs/maintenance.md` y `docs/deployment.md`.
-
-## Resolver conflictos de PR (GitHub "This branch has conflicts")
-Si GitHub marca conflictos, haz merge/rebase del branch objetivo localmente y luego:
+## Inicio rápido
 ```bash
-./scripts/resolve_pr_conflicts.sh --ours
+cp orchestrator/.env.example orchestrator/.env
+cp dashboard/.env.example dashboard/.env
+./scripts/install.sh
+./scripts/install_stack.sh
+./scripts/sync_to_openclaw.sh --target-base ~/.openclaw
+./scripts/start_stack.sh
+./scripts/verify_stack.sh
 ```
-Usa `--theirs` si querés priorizar la versión del branch objetivo en esos archivos.
+
+## Estado de tareas soportado
+`pending`, `queued`, `running`, `blocked`, `failed`, `completed`, `cancelled`.
+
+## Jobs programados
+- Daily brief
+- Campaign review
+- Blocked check
+- Executive summary
+
+## Telegram
+- Script de prueba: `cd orchestrator && npm run telegram:test`
+- Resumen manual: `cd orchestrator && npm run ops:daily-summary`
+
+## Runbook completo
+Ver `docs/runbook-openclaw-vps.md`.

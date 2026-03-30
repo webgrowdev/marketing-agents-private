@@ -1,46 +1,30 @@
-# Deployment en VPS Linux (flujo offline-first)
+# Deployment producción (VPS Linux moderno)
 
-## 1) Preparar snapshots upstream (fuera del VPS si hace falta)
-En una máquina con internet, descargar/copiar snapshots locales de:
-- `marketingskills`
-- `animation-principles`
-- `design-skills`
-
-## 2) Importar snapshots al repo privado
-Primero corré diagnóstico de mapping:
+## Comandos exactos
 ```bash
-./scripts/import_upstream_snapshots.sh \
-  --dry-run --debug-mapping \
-  --marketingskills /path/to/marketingskills \
-  --animation-principles /path/to/animation-principles \
-  --design-skills /path/to/design-skills
-```
+sudo apt update
+sudo apt install -y git curl build-essential postgresql postgresql-contrib redis-server
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
 
-Resolución por orden: `exact match` → `alias match` → `normalized match` → `fuzzy match` → `unresolved`.
+sudo systemctl enable --now postgresql
+sudo systemctl enable --now redis-server
 
-Si el dry-run resuelve correctamente, ejecutar importación real:
-```bash
-./scripts/import_upstream_snapshots.sh \
-  --marketingskills /path/to/marketingskills \
-  --animation-principles /path/to/animation-principles \
-  --design-skills /path/to/design-skills
-```
+sudo -u postgres psql -c "CREATE USER marketing WITH PASSWORD 'marketing';"
+sudo -u postgres psql -c "CREATE DATABASE marketing_agents OWNER marketing;"
 
-Usar `--force-overwrite` solo si querés reemplazar `skills/*/UPSTREAM_SOURCE.md` ya existentes.
+git clone https://github.com/webgrowdev/marketing-agents-private.git
+cd marketing-agents-private
+cp orchestrator/.env.example orchestrator/.env
+cp dashboard/.env.example dashboard/.env
+# editar .env con datos reales
 
-## 3) Instalar y verificar
-```bash
 ./scripts/install.sh
-./scripts/verify.sh
-```
-
-## 4) Sincronizar con OpenClaw
-```bash
+./scripts/install_stack.sh
 ./scripts/sync_to_openclaw.sh --target-base ~/.openclaw
+./scripts/start_stack.sh --prod
+./scripts/verify_stack.sh
 ```
 
-## 5) Validar workspaces
-Confirmar en `~/.openclaw/workspaces/<agent>/` la presencia de:
-- `agent/`
-- `skills/`
-- `shared/product-marketing-context.md`
+## Recomendación de procesos
+Usar `systemd` o `pm2` para `orchestrator` y `dashboard`.
