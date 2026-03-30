@@ -9,15 +9,14 @@ require_cmd bash
 require_cmd find
 require_cmd tar
 require_cmd rsync
+require_cmd npm
 
 ROOT=$(repo_root)
 ensure_dir "${ROOT}/backups"
 
-# Validación rápida de carpetas clave
-for d in agents skills docs shared scripts; do
+for d in agents skills docs shared scripts orchestrator dashboard openclaw; do
   ensure_dir "${ROOT}/$d"
 done
 
-log_info "Instalación completa"
-log_info "Repo: ${ROOT}"
-log_info "Siguiente paso: ./scripts/verify.sh"
+log_info "Instalación base completa"
+log_info "Siguiente paso: ./scripts/install_stack.sh"

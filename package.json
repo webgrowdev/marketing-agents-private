@@ -1,0 +1,16 @@
+{
+  "name": "marketing-agents-private",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "orchestrator",
+    "dashboard"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspace orchestrator",
+    "dev:dashboard": "npm run dev --workspace dashboard",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces"
+  }
+}

@@ -1,12 +1,18 @@
-# Agentes incluidos
+# Agentes operativos
 
-| Agente | Propósito | Skills asignados | Casos de uso |
-|---|---|---|---|
-| seo-content | SEO integral | seo-audit, ai-seo, site-architecture, programmatic-seo, schema-markup, competitor-alternatives | Auditoría SEO, arquitectura de contenidos, escalado orgánico |
-| cro | Optimización de conversión | page-cro, signup-flow-cro, onboarding-cro, form-cro, popup-cro, paywall-upgrade-cro | Landing CRO, optimización de funnel, upgrades |
-| content-copy | Mensajería y copy | copywriting, copy-editing, cold-email, email-sequence, social-content | Secuencias de email, copy de landing, social |
-| paid-measurement | Paid + medición | paid-ads, ad-creative, analytics-tracking, ab-test-setup | Experimentos de adquisición, tracking, iteración creativa |
-| growth-retention | Retención y loops | churn-prevention, free-tool-strategy, referral-program | Activación de retención, referidos, expansión |
-| sales-gtm | Revenue ops | revops, sales-enablement, launch-strategy, pricing-strategy | Enablement comercial, pricing, launches |
-| strategy | Dirección de marketing | marketing-ideas, marketing-psychology | Priorización estratégica, hipótesis de crecimiento |
-| motion-pro | Motion premium | motion-designer, svg-animation-engineer, apple-ui-skills, elevated-design, video-motion-graphics, dramatic-2000ms-plus | Motion para producto, assets de marketing, polish UI |
+## Base (8)
+- seo-content
+- cro
+- content-copy
+- paid-measurement
+- growth-retention
+- sales-gtm
+- strategy
+- motion-pro
+
+## Nuevos (operación)
+- marketing-pm: coordinación, priorización, dependencia y unblock.
+- executive-reporter: reportes ejecutivos y síntesis KPI.
+
+## Mejora de identidad/prompting
+`content-copy` fue endurecido para performance marketing y short-form conversion, con especialidad TikTok Shop y reglas anti-copy genérico.

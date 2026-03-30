@@ -1,14 +1,23 @@
-# Arquitectura del repositorio
+# Arquitectura final del stack
 
-## Capas lógicas
-1. `agents/`: definición operativa por agente, aislada por workspace.
-2. `skills/`: skills curadas (importadas, adaptadas o placeholders explícitos).
-3. `shared/`: contexto reusable entre agentes.
-4. `scripts/`: automatización de instalación, verificación, sync y backup.
-5. `docs/`: documentación interna de operación y gobierno.
+## Capas
+1. **OpenClaw Runtime**: ejecuta agentes aislados por workspace (`~/.openclaw/workspaces/<agent>`).
+2. **Orchestrator (Node.js + TS + Express)**: control central de campañas/tareas, estados, dependencias, retries, eventos y webhooks OpenClaw.
+3. **Jobs Layer (BullMQ + Redis + cron)**: cola, reintentos, y automatización programada (daily brief, campaign review, blocked checks, executive summary).
+4. **Data Layer (PostgreSQL + Prisma)**: campañas, tareas, runs, logs, eventos, métricas.
+5. **Executive Reporting (Telegram Bot API)**: alertas críticas y reportes diarios/manuales.
+6. **Dashboard (Next.js + Tailwind)**: vistas CEO, PM, agentes, activity feed, métricas.
 
-## Principio de aislamiento
-Cada agente se sincroniza a `~/.openclaw/workspaces/<agent>/` con tres subcarpetas: `agent/`, `skills/`, `shared/`. Esto reduce acoplamiento y facilita rollback por workspace.
+## Aislamiento OpenClaw
+- Cada agente se sincroniza con `scripts/sync_to_openclaw.sh`.
+- Registro declarativo en `openclaw/agents.registry.yaml`.
+- Binding por agente `agent:<slug>` y callback por tarea.
 
-## Despliegue en VPS
-El VPS solo necesita una copia del repo privado + utilidades estándar (`bash`, `rsync`, `tar`). No se clonan upstreams en producción.
+## Flujo operacional
+1. PM crea campaña.
+2. PM/API crea tareas con dependencia/priority.
+3. Orchestrator encola tareas (`queued`).
+4. Worker dispara hook OpenClaw y marca `running`.
+5. OpenClaw retorna callback; task pasa a `completed|failed|blocked|cancelled`.
+6. Eventos/logs/runs se guardan en PostgreSQL.
+7. Dashboard y Telegram consumen estado actualizado.
